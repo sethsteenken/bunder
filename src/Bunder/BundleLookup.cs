@@ -15,13 +15,13 @@ namespace Bunder
             _bundles = bundles;
         }
 
-        public bool TryGetBundle(string name, out Bundle bundle)
+        public virtual bool TryGetBundle(string name, out Bundle bundle)
         {
             bundle = FindBundle(name);
             return bundle != null;
         }
 
-        private Bundle FindBundle(string pathOrName)
+        protected virtual Bundle FindBundle(string pathOrName)
         {
             if (string.IsNullOrWhiteSpace(pathOrName))
                 return null;

@@ -9,17 +9,18 @@ namespace Bunder
     [HtmlTargetElement("script", Attributes = AttributeNameAsset)]
     public class ScriptTagHelper : StaticAssetTagHelper
     {
-        public ScriptTagHelper(BunderSettings settings) 
-            : base(settings)
+        public ScriptTagHelper(BunderSettings settings, IAssetResolver assetResolver) 
+            : base(settings, assetResolver)
         {
-
+            
         }
 
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets)
         {
-            // TODO
 
-            await base.ProcessAsync(context, output);
+
+
+            throw new NotImplementedException();
         }
     }
 }

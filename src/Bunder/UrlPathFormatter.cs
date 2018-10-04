@@ -15,7 +15,7 @@ namespace Bunder
             _versioningFormatter = versioningFormatter;
         }
 
-        public string GetFullPath(string virtualPath, bool includeVersioning)
+        public virtual string GetFullPath(string virtualPath, bool includeVersioning)
         {
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
 

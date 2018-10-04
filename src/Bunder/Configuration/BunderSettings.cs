@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Bunder
+﻿namespace Bunder
 {
     public sealed class BunderSettings
     {
