@@ -5,27 +5,29 @@ namespace Bunder
 {
     public class AssetResolver : IAssetResolver
     {
-        private readonly IDictionary<string, Bundle> _bundleLookup;
+        private readonly IBundleLookup _bundleLookup;
         private readonly IPathFormatter _pathFormatter;
 
-        public AssetResolver(IDictionary<string, Bundle> bundleLookup, IPathFormatter pathFormatter)
+        public AssetResolver(IBundleLookup bundleLookup, IPathFormatter pathFormatter)
         {
             _bundleLookup = bundleLookup;
             _pathFormatter = pathFormatter;
         }
 
-        public virtual IEnumerable<Asset> Resolve(IEnumerable<string> pathsOrBundles, bool useBundledOutput, bool useVersioning)
+        public virtual IEnumerable<Asset> Resolve(AssetResolutionContext context)
         {
+            Guard.IsNotNull(context, nameof(context));
+
             var assets = new List<Asset>();
-            BuildAssets(assets, pathsOrBundles, useBundledOutput, useVersioning);
-            return EliminateDuplicates(assets, useVersioning);
+            BuildAssets(assets, context.PathsOrBundles, context.UseBundledOutput, context.IncludeVersioning);
+            return EliminateDuplicates(assets, context.IncludeVersioning);
         }
 
         protected virtual void BuildAssets(List<Asset> assets, IEnumerable<string> references, bool useBundledOutput, bool useVersioning)
         {
             foreach (string contentReference in references)
             {
-                if (_bundleLookup.TryGetValue(contentReference, out Bundle bundle))
+                if (_bundleLookup.TryGetBundle(contentReference, out Bundle bundle))
                 {
                     if (useBundledOutput)
                         assets.Add(new Asset(_pathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle));

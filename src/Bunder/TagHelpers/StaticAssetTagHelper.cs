@@ -32,10 +32,10 @@ namespace Bunder
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var assets = AssetResolver.Resolve(
+            var assets = AssetResolver.Resolve(new AssetResolutionContext(
                             Assets, 
                             useBundledOutput: UseBundledOutput ?? Settings.UseBundledOutput, 
-                            includeVersioning: UseVersioning ?? Settings.UseVersioning);
+                            includeVersioning: UseVersioning ?? Settings.UseVersioning));
 
             await ProcessStaticAssetTagAsync(context, output, assets);
         }

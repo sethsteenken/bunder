@@ -20,7 +20,7 @@ namespace Bunder
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
 
             if (includeVersioning)
-                virtualPath = _versioningFormatter.GetVersionedPath(virtualPath);
+                virtualPath = _versioningFormatter.GetVersionedPath(_baseUrl, virtualPath);
 
             if (!Uri.TryCreate(virtualPath, UriKind.RelativeOrAbsolute, out Uri uri))
                 throw new InvalidCastException($"Could not create Uri from virtual path '{virtualPath}'.");
