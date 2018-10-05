@@ -5,10 +5,10 @@ namespace Bunder
 {
     public class AssetResolver : IAssetResolver
     {
-        private readonly IBundleLookup _bundleLookup;
+        private readonly IDictionary<string, Bundle> _bundleLookup;
         private readonly IPathFormatter _pathFormatter;
 
-        public AssetResolver(IBundleLookup bundleLookup, IPathFormatter pathFormatter)
+        public AssetResolver(IDictionary<string, Bundle> bundleLookup, IPathFormatter pathFormatter)
         {
             _bundleLookup = bundleLookup;
             _pathFormatter = pathFormatter;
@@ -25,7 +25,7 @@ namespace Bunder
         {
             foreach (string contentReference in references)
             {
-                if (_bundleLookup.TryGetBundle(contentReference, out Bundle bundle))
+                if (_bundleLookup.TryGetValue(contentReference, out Bundle bundle))
                 {
                     if (useBundledOutput)
                         assets.Add(new Asset(_pathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle));
