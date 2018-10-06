@@ -14,13 +14,13 @@ namespace Bunder
             _pathFormatter = pathFormatter;
         }
 
-        public virtual IEnumerable<Asset> Resolve(AssetResolutionContext context)
+        public virtual IReadOnlyList<Asset> Resolve(AssetResolutionContext context)
         {
             Guard.IsNotNull(context, nameof(context));
 
             var assets = new List<Asset>();
             BuildAssets(assets, context.PathsOrBundles, context.UseBundledOutput, context.IncludeVersioning);
-            return EliminateDuplicates(assets, context.IncludeVersioning);
+            return EliminateDuplicates(assets, context.IncludeVersioning).ToList();
         }
 
         protected virtual void BuildAssets(List<Asset> assets, IEnumerable<string> references, bool useBundledOutput, bool useVersioning)

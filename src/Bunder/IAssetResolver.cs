@@ -4,6 +4,6 @@ namespace Bunder
 {
     public interface IAssetResolver
     {
-        IEnumerable<Asset> Resolve(AssetResolutionContext context);
+        IReadOnlyList<Asset> Resolve(AssetResolutionContext context);
     }
 }

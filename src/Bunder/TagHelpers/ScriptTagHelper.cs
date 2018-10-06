@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Bunder
+namespace Bunder.TagHelpers
 {
     [HtmlTargetElement("script", Attributes = AttributeNameAsset)]
     public class ScriptTagHelper : StaticAssetTagHelper
@@ -15,12 +13,20 @@ namespace Bunder
             
         }
 
-        protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets)
+        protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IReadOnlyList<Asset> assets)
         {
+            for (int i = 0; i < assets.Count; i++)
+            {
+                if (i == 0)
+                {
+                    output.Attributes.Add("src", assets[i]);
+                    continue;
+                }
 
+                output.PostContent.AppendHtml($"<script src='{assets[i]}'></script>");
+            }
 
-
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Bunder
+namespace Bunder.TagHelpers
 {
     public abstract class StaticAssetTagHelper : TagHelper
     {
@@ -26,9 +26,9 @@ namespace Bunder
         [HtmlAttributeName("use-versioning")]
         public bool? UseVersioning { get; set; }
 
-        protected IEnumerable<string> Assets => Asset?.Replace('|', ',').Replace(';', ',').Split(',');
+        protected IReadOnlyList<string> Assets => Asset?.Replace('|', ',').Replace(';', ',').Split(',');
 
-        protected abstract Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets);
+        protected abstract Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IReadOnlyList<Asset> assets);
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
