@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Bunder
 {
@@ -21,41 +19,47 @@ namespace Bunder
 
         public static IServiceCollection AddBunder(this IServiceCollection services)
         {
-            return null;
-
+            return AddBunder(services, null, null);
         }
-
 
         public static IServiceCollection AddBunder(this IServiceCollection services, BunderSettings settings)
         {
-            return null;
+            return AddBunder(services, settings, null);
         }
 
         public static IServiceCollection AddBunder(this IServiceCollection services, IBundlingConfiguration bundlingConfiguration)
         {
-            return null;
+            return AddBunder(services, null, bundlingConfiguration);
         }
-
 
         public static IServiceCollection AddBunder(this IServiceCollection services, BunderSettings settings, IBundlingConfiguration bundlingConfiguration)
         {
             Guard.IsNotNull(services, nameof(services));
-            Guard.IsNotNull(settings, nameof(settings));
-            Guard.IsNotNull(bundlingConfiguration, nameof(bundlingConfiguration));
-
+            
             services.TryAddSingleton<JsonSerializer>();
 
-            services.TryAddSingleton<BunderSettings>(settings);
-            services.TryAddSingleton<IBundlingConfiguration>((serviceProvider) =>
+            if (settings != null)
+                services.TryAddSingleton<BunderSettings>(settings);
+            else
+                services.AddCustomConfigurationSettings<BunderSettings>(BunderSettings.DefaultSectionName, singleton: true);
+
+            if (bundlingConfiguration != null)
             {
-                string configPath = Path.Combine(serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath,
-                                                serviceProvider.GetRequiredService<BunderSettings>().BundlesConfigFilePath);
+                services.TryAddSingleton<IBundlingConfiguration>(bundlingConfiguration);
+            }
+            else
+            {
+                services.TryAddSingleton<IBundlingConfiguration>((serviceProvider) =>
+                {
+                    string configPath = Path.Combine(serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath,
+                                                    serviceProvider.GetRequiredService<BunderSettings>().BundlesConfigFilePath);
 
-                return new BundlingJsonConfiguration(_defaultOutputDirectoryLookup, 
-                                serviceProvider.GetRequiredService<JsonSerializer>(),
-                                configPath);
-            });
-
+                    return new BundlingJsonConfiguration(_defaultOutputDirectoryLookup,
+                                    serviceProvider.GetRequiredService<JsonSerializer>(),
+                                    configPath);
+                });
+            }
+            
             services.TryAddSingleton<IEnumerable<Bundle>>((serviceProvider) => serviceProvider.GetRequiredService<IBundlingConfiguration>().Build());
             services.TryAddSingleton<IBundleLookup, BundleLookup>();
             services.TryAddSingleton<IVersioningFormatter>((serviceProvider) =>
@@ -66,11 +70,14 @@ namespace Bunder
                 );
             });
 
-            services.TryAddScoped<IPathFormatter, UrlPathFormatter>();
+            services.TryAddScoped<IPathFormatter>((serviceProvider) =>
+            {
+                return new UrlPathFormatter(
+                                serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.GetBaseUrl(),
+                                serviceProvider.GetRequiredService<IVersioningFormatter>());
+            });
+
             services.TryAddScoped<IAssetResolver, AssetResolver>();
-
-
-            //serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.PathBase
 
             return services;
         }

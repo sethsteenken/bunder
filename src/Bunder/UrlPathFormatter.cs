@@ -10,7 +10,6 @@ namespace Bunder
 
         public UrlPathFormatter(string baseUrl, IVersioningFormatter versioningFormatter)
         {
-            // TODO - _httpContextAccessor.HttpContext.Request.GetBaseUrl()
             _baseUrl = baseUrl;
             _versioningFormatter = versioningFormatter;
         }
