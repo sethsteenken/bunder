@@ -11,12 +11,6 @@ namespace Bunder
 {
     public static class BunderServiceCollectionExtensions
     {
-        internal static readonly IDictionary<string, string> _defaultOutputDirectoryLookup = new Dictionary<string, string>()
-        {
-            { "js", "/content/js" },
-            { "css", "/content/css" }
-        };
-
         public static IServiceCollection AddBunder(this IServiceCollection services)
         {
             return AddBunder(services, null, null);
@@ -51,10 +45,11 @@ namespace Bunder
             {
                 services.TryAddSingleton<IBundlingConfiguration>((serviceProvider) =>
                 {
+                    var bunderSettings = serviceProvider.GetRequiredService<BunderSettings>();
                     string configPath = Path.Combine(serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath,
-                                                    serviceProvider.GetRequiredService<BunderSettings>().BundlesConfigFilePath);
+                                                    bunderSettings.BundlesConfigFilePath);
 
-                    return new BundlingJsonConfiguration(_defaultOutputDirectoryLookup,
+                    return new BundlingJsonConfiguration(bunderSettings.OutputDirectories,
                                     serviceProvider.GetRequiredService<JsonSerializer>(),
                                     configPath);
                 });
