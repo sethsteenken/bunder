@@ -62,7 +62,7 @@ namespace Bunder
             {
                 return new FileVersioningFormatter(
                     serviceProvider.GetRequiredService<IHostingEnvironment>().WebRootFileProvider,
-                    serviceProvider.GetRequiredService<IMemoryCache>()
+                    serviceProvider.GetService<IMemoryCache>()
                 );
             });
 

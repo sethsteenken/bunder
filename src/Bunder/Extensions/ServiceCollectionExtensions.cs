@@ -10,15 +10,13 @@ namespace Bunder.Extensions
         /// <summary>
         /// Register a custom class and interface that represents a given configuration section on the <see cref="IConfiguration"/> instance.
         /// </summary>
-        /// <typeparam name="TSettingsInterface">Interface that represents the configuration section.</typeparam>
         /// <typeparam name="TSettingsType">Class that represents the configuration section.</typeparam>
         /// <param name="services">Existing service collection.</param>
-        /// <param name="sectionName">Name of the section found in <see cref="IConfiguration"/> that will be read into <typeparamref name="TSettingsInterface"/> and <typeparamref name="TSettingsType"/>.</param>
-        /// <param name="singleton">Whether or not <typeparamref name="TSettingsInterface"/> and <typeparamref name="TSettingsType"/> is registered as a singleton. If not, configuration settings can be altered without an application restart at the cost of performance.</param>
+        /// <param name="sectionName">Name of the section found in <see cref="IConfiguration"/> that will be read into <typeparamref name="TSettingsType"/>.</param>
+        /// <param name="singleton">Whether or not <typeparamref name="TSettingsType"/> is registered as a singleton. If not, configuration settings can be altered without an application restart at the cost of performance.</param>
         /// <returns></returns>
-        public static IServiceCollection AddCustomConfigurationSettings<TSettingsInterface, TSettingsType>(this IServiceCollection services, string sectionName, bool singleton)
-            where TSettingsInterface : class
-            where TSettingsType : class, TSettingsInterface, new()
+        public static IServiceCollection AddCustomConfigurationSettings<TSettingsType>(this IServiceCollection services, string sectionName, bool singleton)
+            where TSettingsType : class, new()
         {
             Guard.IsNotNull(services, nameof(services));
 
@@ -30,15 +28,9 @@ namespace Bunder.Extensions
             // Scoped settings will be read on every request (no app restart on setting changes at the drawback of performance)
             // IOptionsSnapshot is also registered under Scoped to allow this always-updated feature.
             if (singleton)
-            {
                 services.AddSingleton<TSettingsType>(sp => sp.GetRequiredService<IOptions<TSettingsType>>().Value);
-                services.AddSingleton<TSettingsInterface>(sp => sp.GetRequiredService<TSettingsType>());
-            }
             else
-            {
                 services.AddScoped<TSettingsType>(sp => sp.GetRequiredService<IOptionsSnapshot<TSettingsType>>().Value);
-                services.AddScoped<TSettingsInterface>(sp => sp.GetRequiredService<TSettingsType>());
-            }
 
             return services;
         }

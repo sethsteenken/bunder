@@ -37,7 +37,7 @@ namespace Bunder
             if (Uri.TryCreate(resolvedPath, UriKind.Absolute, out var uri) && !uri.IsFile)               
                 return virtualPath;
 
-            if (_cache.TryGetValue(virtualPath, out string value))
+            if (_cache != null && _cache.TryGetValue(virtualPath, out string value))
                 return value;
 
             var cacheEntryOptions = new MemoryCacheEntryOptions();
@@ -59,7 +59,7 @@ namespace Bunder
                 value = virtualPath; // if the file is not in the current server.
 
             cacheEntryOptions.SetSize(value.Length * sizeof(char));
-            value = _cache.Set(virtualPath, value, cacheEntryOptions);
+            value = _cache?.Set(virtualPath, value, cacheEntryOptions);
 
             return value;
         }
