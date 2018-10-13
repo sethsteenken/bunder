@@ -33,5 +33,10 @@ namespace Bunder
         public bool IsStatic { get; private set; }
         public bool IsBundle => Bundle != null;
         public Bundle Bundle { get; private set; }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }
