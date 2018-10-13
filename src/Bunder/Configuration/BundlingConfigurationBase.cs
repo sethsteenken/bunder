@@ -4,6 +4,9 @@ using System.IO;
 
 namespace Bunder
 {
+    /// <summary>
+    /// Base class for handling bundling configuration, specifically from transitioning the basic POCOs <see cref="BundleConfig"/> to the final <see cref="Bundle"/>.
+    /// </summary>
     public abstract class BundlingConfigurationBase : IBundlingConfiguration
     {
         protected BundlingConfigurationBase(IDictionary<string, string> outputDirectoryLookup)
@@ -13,6 +16,9 @@ namespace Bunder
             OutputDirectoryLookup = outputDirectoryLookup;
         }
 
+        /// <summary>
+        /// Lookup dictionary to get the output directories for each file extension.
+        /// </summary>
         protected IDictionary<string, string> OutputDirectoryLookup { get; private set; }
 
         protected abstract IReadOnlyList<BundleConfig> GetBundleConfiguration();

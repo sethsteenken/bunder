@@ -2,6 +2,9 @@
 
 namespace Bunder
 {
+    /// <summary>
+    /// Simple POCO designed to be built/deserialized and transitioned to <see cref="Bundle"/> via <see cref="BundlingConfigurationBase"/>.
+    /// </summary>
     public class BundleConfig
     {
         public string Name { get; set; }

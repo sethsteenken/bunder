@@ -4,6 +4,9 @@ using System.IO;
 
 namespace Bunder
 {
+    /// <summary>
+    /// Bundling configuration that reads a local json file to build list of <see cref="BundleConfig"/> to be transitioned to list of <see cref="Bundle"/>.
+    /// </summary>
     public class BundlingJsonConfiguration : BundlingConfigurationBase
     {
         private readonly JsonSerializer _serializer;
