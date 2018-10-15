@@ -27,7 +27,7 @@ namespace Bunder
         }
 
         /// <summary>
-        /// Returns the absolute url for a given <paramref name="uri"/> based on the supplied <paramref name="baseUrl"/>.
+        /// Returns the absolute url for a given <paramref name="uri"/> based on the supplied <paramref name="baseUri"/>.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="baseUri"></param>
