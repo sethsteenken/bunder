@@ -3,6 +3,9 @@ using System.Web;
 
 namespace Bunder
 {
+    /// <summary>
+    /// Path formatting provider to resolve virtual paths. Intended to utilize a base url based on the current web request.
+    /// </summary>
     public class UrlPathFormatter : IPathFormatter
     {
         private readonly string _baseUrl;
@@ -14,6 +17,12 @@ namespace Bunder
             _versioningFormatter = versioningFormatter;
         }
 
+        /// <summary>
+        /// Get the fully qualified path of a <paramref name="virtualPath"/>. Path must resolve to a valid <see cref="Uri"/>.
+        /// </summary>
+        /// <param name="virtualPath">Virtual path to resolve.</param>
+        /// <param name="includeVersioning">Whether or not to append versioning to the full path result.</param>
+        /// <returns></returns>
         public virtual string GetFullPath(string virtualPath, bool includeVersioning)
         {
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
