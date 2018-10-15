@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Bunder.TagHelpers
 {
     [HtmlTargetElement("script", Attributes = AttributeNameAsset)]
-    public class ScriptTagHelper : StaticAssetTagHelper
+    public sealed class ScriptTagHelper : StaticAssetTagHelper
     {
         public ScriptTagHelper(BunderSettings settings, IAssetResolver assetResolver) 
             : base(settings, assetResolver)

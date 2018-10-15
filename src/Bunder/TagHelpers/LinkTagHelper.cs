@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Bunder.TagHelpers
 {
     [HtmlTargetElement("link", Attributes = AttributeNameAsset)]
-    public class LinkTagHelper : StaticAssetTagHelper
+    public sealed class LinkTagHelper : StaticAssetTagHelper
     {
         public LinkTagHelper(BunderSettings settings, IAssetResolver assetResolver) 
             : base(settings, assetResolver)

@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Bunder.TagHelpers
 {
+    /// <summary>
+    /// Base tag helper for rendering one or more static asset values.
+    /// </summary>
     public abstract class StaticAssetTagHelper : TagHelper
     {
         public const string AttributeNameAsset = "asset";

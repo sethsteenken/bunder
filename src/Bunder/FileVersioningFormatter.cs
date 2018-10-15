@@ -11,8 +11,8 @@ namespace Bunder
     /// </summary>
     public class FileVersioningFormatter : IVersioningFormatter
     {
-        private const string VersionKey = "v";
-        private static readonly char[] QueryStringAndFragmentTokens = new[] { '?', '#' };
+        private const string _versionKey = "v";
+        private static readonly char[] _queryStringAndFragmentTokens = new[] { '?', '#' };
 
         private readonly IFileProvider _fileProvider;
         private readonly IMemoryCache _cache;
@@ -29,7 +29,7 @@ namespace Bunder
 
             var resolvedPath = virtualPath;
 
-            var queryStringOrFragmentStartIndex = virtualPath.IndexOfAny(QueryStringAndFragmentTokens);
+            var queryStringOrFragmentStartIndex = virtualPath.IndexOfAny(_queryStringAndFragmentTokens);
             if (queryStringOrFragmentStartIndex != -1)
                 resolvedPath = virtualPath.Substring(0, queryStringOrFragmentStartIndex);
 
@@ -54,7 +54,7 @@ namespace Bunder
             }
 
             if (fileInfo.Exists)
-                value = QueryHelpers.AddQueryString(virtualPath, VersionKey, GetHashForFile(fileInfo));
+                value = QueryHelpers.AddQueryString(virtualPath, _versionKey, GetHashForFile(fileInfo));
             else
                 value = virtualPath; // if the file is not in the current server.
 
