@@ -1,20 +1,9 @@
-using System.Web;
 using Xunit;
 
 namespace Bunder.Tests
 {
     public class AssetTests
     {
-        [Theory]
-        [InlineData("http://www.google.com/something<>")]
-        [InlineData("yahoo.com/something!$@#")]
-        public void Value_IsUrlEncoded(string value)
-        {
-            var asset = new Asset(value);
-            string encoded = HttpUtility.UrlEncode(value);
-            Assert.Equal(encoded, asset.Value);
-        }
-
         [Fact]
         public void IsBundle_ReturnsFalse_WhenNoBundleIsSupplied()
         {

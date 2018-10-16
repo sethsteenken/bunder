@@ -11,7 +11,7 @@ namespace Bunder.Tests
                 bundleLookup = new Mock<IBundleLookup>().Object;
 
             if (pathFormatter == null)
-                pathFormatter = new Mock<IPathFormatter>().Object;
+                pathFormatter = new MockPathFormatter();
 
             return new AssetResolver(bundleLookup, pathFormatter);
         }

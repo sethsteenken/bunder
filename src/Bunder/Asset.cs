@@ -29,7 +29,7 @@ namespace Bunder
 
         private Asset(string value, bool isStatic, Bundle bundle)
         {
-            Value = isStatic ? value : HttpUtility.UrlEncode(value);
+            Value = value;
             IsStatic = isStatic;
             Bundle = bundle;
         }

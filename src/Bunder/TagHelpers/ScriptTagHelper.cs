@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Bunder.TagHelpers
 {
@@ -17,13 +18,15 @@ namespace Bunder.TagHelpers
         {
             for (int i = 0; i < assets.Count; i++)
             {
+                string path = HttpUtility.UrlEncode(assets[i].Value);
+
                 if (i == 0)
                 {
-                    output.Attributes.Add("src", assets[i]);
+                    output.Attributes.Add("src", path);
                     continue;
                 }
 
-                output.PostContent.AppendHtml($"<script src='{assets[i]}'></script>");
+                output.PostContent.AppendHtml($"<script src='{path}'></script>");
             }
 
             return Task.CompletedTask;
