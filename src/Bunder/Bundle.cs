@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace Bunder
 {
@@ -29,9 +28,7 @@ namespace Bunder
             OutputFileName = string.IsNullOrWhiteSpace(outputFileName) ? $"{Name.Replace(" ", "_")}.min.{FileExtension}" : outputFileName?.Trim();
             SubPath = subPath?.Trim();
 
-            OutputPath = PathHelper.Combine(outputDirectory, 
-                            !string.IsNullOrWhiteSpace(SubPath) ? (string.Concat(SubPath, SubPath.EndsWith("/") ? "" : "/")) : string.Empty,
-                            OutputFileName);
+            OutputPath = PathHelper.Combine(outputDirectory, SubPath, OutputFileName);
         }
 
         /// <summary>

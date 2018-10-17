@@ -13,9 +13,7 @@ namespace Bunder.Tests
         public void Resolve_ThrowsException_WhenContextIsNull()
         {
             var assetResolver = AssetResolverTestHelper.BuildTestResolver();
-            var exception = Record.Exception(() => assetResolver.Resolve(context: null));
-            Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.Throws<ArgumentNullException>(() => assetResolver.Resolve(context: null));
         }
 
         [Fact]

@@ -24,7 +24,7 @@ namespace Bunder
 
             DetermineCharsToAdjust(fileSystem, out char slashToReplace, out char newSlash);
 
-            return Path.Combine(paths).Replace(slashToReplace, newSlash);
+            return Path.Combine(paths.Select(p => p ?? string.Empty).ToArray()).Replace(slashToReplace, newSlash);
         }
 
         private static void DetermineCharsToAdjust(bool fileSystem, out char slashToReplace, out char newSlash)
