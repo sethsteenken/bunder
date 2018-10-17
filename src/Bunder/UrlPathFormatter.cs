@@ -30,10 +30,20 @@ namespace Bunder
             if (includeVersioning)
                 virtualPath = _versioningFormatter.GetVersionedPath(_baseUrl, virtualPath);
 
-            if (!Uri.TryCreate(virtualPath, UriKind.RelativeOrAbsolute, out Uri uri))
-                throw new InvalidCastException($"Could not create Uri from virtual path '{virtualPath}'.");
+            if (!IsValidUri(virtualPath, out Uri uri))
+                throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.");
 
-            return HttpUtility.UrlEncode(uri.ToAbsoluteUrl(_baseUrl));
+            return uri.ToAbsoluteUrl(_baseUrl);
+        }
+
+        private static bool IsValidUri(string path, out Uri uri)
+        {
+            uri = null;
+
+            if (!Uri.IsWellFormedUriString(path, UriKind.RelativeOrAbsolute))
+                return false;
+
+            return Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out uri);
         }
     }
 }
