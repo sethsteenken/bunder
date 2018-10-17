@@ -95,5 +95,33 @@ namespace Bunder.Tests
             Assert.Equal(1, assets.Count);
             Assert.Equal(expectedOutput, assets[0].Value);
         }
+
+        [Fact]
+        public void Resolve_RemovesDuplicateFiles_WhenBundleFilesHaveDuplicates()
+        {
+            string outputDirectory = "/my/output";
+            string duplicateFile = "duplicate.js";
+            var bundles = new List<Bundle>()
+            {
+                new Bundle("bundle-one", "js", outputDirectory, new string[] { "my-unique-file.js", duplicateFile }),
+                new Bundle("bundle-two", "js", outputDirectory, new string[] { "other-unique-file.js", "another-unique.js", duplicateFile })
+            };
+
+            var bundleLookup = new Mock<IBundleLookup>();
+            foreach (var bundle in bundles)
+            {
+                Bundle bundleCopy = bundle;
+                bundleLookup.Setup(bl => bl.TryGetBundle(bundle.Name, out bundleCopy)).Returns(true);
+            }
+
+            var assetResolver = AssetResolverTestHelper.BuildTestResolver(bundleLookup.Object);
+
+            var context = new AssetResolutionContext(bundles.Select(b => b.Name), useBundledOutput: false, includeVersioning: false);
+
+            var assets = assetResolver.Resolve(context);
+
+            Assert.Equal(4, assets.Count);
+            Assert.Equal(1, assets.Count(a => a.Value == duplicateFile));
+        }
     }
 }
