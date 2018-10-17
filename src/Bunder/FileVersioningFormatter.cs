@@ -34,6 +34,7 @@ namespace Bunder
         /// <returns></returns>
         public string GetVersionedPath(PathString basePath, string virtualPath)
         {
+            Guard.IsNotNull(basePath, nameof(basePath));
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
 
             var resolvedPath = virtualPath;

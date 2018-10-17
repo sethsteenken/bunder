@@ -17,7 +17,7 @@ namespace Bunder.Tests
         [InlineData("another bundle", "js")]
         [InlineData("my-bundle", "css")]
         [InlineData("Bundle Time", "js")]
-        public void Ctor_DefaultFileNameIsSet_WhenOutputFileNameNotSupplied(string bundleName, string ext)
+        public void OutputFileName_ReturnsDefaultFileName_WhenOutputFileNameNotSupplied(string bundleName, string ext)
         {
             var expected = $"{bundleName.Replace(" ", "_")}.min.{ext}";
             var bundle = new Bundle(bundleName, ext, "/my/output", files: null);

@@ -26,7 +26,9 @@ namespace Bunder
         /// <returns>True if bundle is found. False if not found.</returns>
         public bool TryGetBundle(string name, out Bundle bundle)
         {
-            return _bundleDictionary.TryGetValue(name?.ToLower(), out bundle);
+            Guard.IsNotNull(name, nameof(name));
+
+            return _bundleDictionary.TryGetValue(name.ToLower(), out bundle);
         }
     }
 }
