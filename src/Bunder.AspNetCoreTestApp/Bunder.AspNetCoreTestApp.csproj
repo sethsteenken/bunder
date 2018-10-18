@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\source_files\" />
     <Folder Include="wwwroot\output\" />
   </ItemGroup>
 
