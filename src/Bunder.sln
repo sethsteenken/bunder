@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bunder", "Bunder\Bunder.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{335103E2-94F2-4D20-B103-C2F39C597468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bunder.Tests", "..\tests\Bunder.Tests\Bunder.Tests.csproj", "{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bunder.Tests", "..\tests\Bunder.Tests\Bunder.Tests.csproj", "{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bunder.AspNetCoreTestApp", "Bunder.AspNetCoreTestApp\Bunder.AspNetCoreTestApp.csproj", "{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +25,17 @@ Global
 		{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2} = {335103E2-94F2-4D20-B103-C2F39C597468}
+		{8F3025D7-E65B-4007-A7BA-84F7804CBEA1} = {335103E2-94F2-4D20-B103-C2F39C597468}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE0C4C2A-4CA6-460E-B88C-BE08112C795F}
