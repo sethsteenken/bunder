@@ -1,7 +1,8 @@
-{
-  "Bundles": [
-    {
+[
+  {
+    "name": "my-bundle",
+    "files": {
 
     }
-  ]
-}
+  }
+]
