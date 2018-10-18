@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{335103E2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bunder.Tests", "..\tests\Bunder.Tests\Bunder.Tests.csproj", "{A1B725FB-1514-4A26-8D59-F8A4D92DF9D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bunder.AspNetCoreTestApp", "Bunder.AspNetCoreTestApp\Bunder.AspNetCoreTestApp.csproj", "{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bunder.AspNetCoreTestApp", "..\tests\Bunder.AspNetCoreTestApp\Bunder.AspNetCoreTestApp.csproj", "{8F3025D7-E65B-4007-A7BA-84F7804CBEA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bunder\Bunder.csproj" />
+    <ProjectReference Include="..\..\src\Bunder\Bunder.csproj" />
   </ItemGroup>
 
 </Project>
