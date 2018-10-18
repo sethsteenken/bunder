@@ -19,8 +19,8 @@ var baseBath = "./wwwroot/";
 
 // get bundle definitions from json config file
 var bundles = require("./bundles.json"),
-    appSettings = require("./appsettings.json");
-
+    appSettings = require("./appsettings.json"),
+    bunderSettings = appSettings.Bunder;
 
 
 // build out script bundles based on explicitly defined "type" or check file extension of first file in list
@@ -123,16 +123,24 @@ function BoolArgument(args, key, defaultValue) {
         self.Value = ToBool(self.Argument);
 }
 
-gulp.task("clean-js", function () {
-    return gulp
-        .src(settings.paths.scriptsDestDirectory, { read: false })
-        .on("end", function () {
-            console.log("* Cleaning destintation '" + settings.paths.scriptsDestDirectory + "'... *");
-        })
-        .pipe(clean())
-        .on("end", function () {
-            console.log("* Cleaning complete. *");
-        });
+gulp.task("clean-bunder-output", function () {
+
+    var _gulp = gulp;
+
+    if (bunderSettings && bunderSettings.OutputDirectories) {
+        for (var i = 0; i < bunderSettings.OutputDirectories.length; i++) {
+            _gulp = _gulp.src(bunderSettings.OutputDirectories[i][1], { read: false })
+                .on("end", function () {
+                    console.log("* Cleaning destintation '" + bunderSettings.OutputDirectories[i][1] + "'... *");
+                })
+                .pipe(clean())
+                .on("end", function () {
+                    console.log("* Cleaning complete. *");
+                });
+        }
+    }
+
+    return _gulp;
 });
 
 function BundleJS(newerOnly) {
