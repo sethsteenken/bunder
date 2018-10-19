@@ -1,1 +1,9 @@
-﻿
+﻿(function () {
+
+
+
+
+    // comments
+    alert("three");
+
+})();

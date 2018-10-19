@@ -1,13 +1,5 @@
 ﻿"use strict";
 
-var settings = {
-    paths: {
-        scriptsDestDirectory: "./wwwroot/content/js/",
-        stylesDestDirectory: "./wwwroot/content/css/"
-    },
-    basePath: "./wwwroot/" // appended to filepaths defined in bundle.Files
-}
-
 var gulp = require("gulp"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
@@ -15,50 +7,10 @@ var gulp = require("gulp"),
     newer = require("gulp-newer"),
     clean = require('gulp-clean');
 
-var baseBath = "./wwwroot/";
-
-// get bundle definitions from json config file
-var bundles = require("./bundles.json"),
-    appSettings = require("./appsettings.json"),
-    bunderSettings = appSettings.Bunder;
-
-
-// build out script bundles based on explicitly defined "type" or check file extension of first file in list
-var scriptBundles = bundles.filter(function (item) {
-    return (item.type !== undefined && (item.type === "js" || item.type === "JS"))
-        || (item.type === undefined && item.files !== undefined && item.files.length > 0 && item.files.some(function (file) { return file.endsWith("js"); }));
-});
-
-// build out style bundles based on explicitly defined "type" or check file extension of first file in list
-var styleBundles = bundles.filter(function (item) {
-    return (item.type !== undefined && (item.type === "css" || item.type === "CSS"))
-        || (item.type === undefined && item.files !== undefined && item.files.length > 0 && item.files.some(function (file) { return file.endsWith("css"); }));
-});
-
-// recursively build out list of files in a bundle
-function BuildFiles(bundle, bundlesList) {
-    var bundleFiles = [];
-
-    if (bundle && bundle.files && bundle.files.length) {
-        for (var j = 0; j < bundle.files.length; j++) {
-            //if "file" is found as a bundle name, recursively get that bundle's files
-            var existingBundle = bundlesList.filter(function (b) {
-                return b.name === bundle.files[j];
-            });
-
-            if (existingBundle && existingBundle.length) {
-                bundleFiles = bundleFiles.concat(BuildFiles(existingBundle[0], bundlesList));
-            } else {
-                var file = bundle.files[j];
-                if (settings.basePath && settings.basePath.length)
-                    file = settings.basePath + file;
-                bundleFiles.push(file);
-            }
-        }
-    }
-
-    return bundleFiles;
-}
+// get Bunder settings and bundle definitions from json config files
+var bunderSettings = require("./appsettings.json").Bunder,
+    basePath = "./wwwroot/",
+    bundleConfigs = require("./bundles.json");
 
 function ToBool(value) {
     if (value === undefined) {
@@ -81,49 +33,153 @@ function ToBool(value) {
     }
 }
 
-function Argument(args, key, defaultValue) {
-    var self = this;
-
-    function _getArgumentValue(args, key) {
-        var option,
-            index = args.indexOf(key);
-
-        if (index > -1 && args.length > (index + 1)) {
-            return args[index + 1];
-        }
-
-        return undefined;
+function Bundle(config, bunderSettings) {
+    if (!config) {
+        throw new Error("Bundle config paramater null.");
     }
 
-    self.Value = defaultValue;
-    self.Argument = _getArgumentValue(args, key);
-
-    if (self.Argument !== undefined)
-        self.Value = self.Argument;
-}
-
-function BoolArgument(args, key, defaultValue) {
-    var self = this;
-
-    function _getArgumentValue(args, key) {
-        var option,
-            index = args.indexOf(key);
-
-        if (index > -1 && args.length > (index + 1)) {
-            return args[index + 1];
-        }
-
-        return undefined;
+    if (!config.Files || !config.Files.length) {
+        throw new Error("Bundle must have at least one file under Files reference.");
     }
 
-    self.Value = defaultValue === undefined ? false : defaultValue;
-    self.Argument = _getArgumentValue(args, key);
+    var _ext = /(?:\.([^.]+))?$/.exec(config.OutputFileName || config.Files[0])[1];
+    if (_ext) {
+        _ext = _ext.toLowerCase();
+    }
 
-    if (self.Argument !== undefined)
-        self.Value = ToBool(self.Argument);
+    this.Extension = _ext;
+    this.Name = config.Name;
+    this.OutputFileName = config.OutputFileName || this.Name.replace(" ", "_") + ".min." + this.Extension;
+    this.SubPath = config.SubPath || "";
+    this.Files = config.Files;
+    this.OutputDirectory = config.OutputDirectory || bunderSettings.OutputDirectories[this.Extension] || "";
+
+    // build output path
+    var _outputPath = this.OutputDirectory + this.SubPath;
+    if (_outputPath.slice(-1) != "/") {
+        _outputPath += "/";
+    }
+    _outputPath += this.OutputFileName;
+
+    this.OutputPath = _outputPath;
+
+    this.Concat = function () {
+        return concat(this.OutputPath);
+    };
+
+    this.Minify = function () {
+        switch (this.Extension) {
+            case "js":
+                return uglify();
+            case "css":
+                return cssmin();
+            default:
+                throw new Error("No support for file extension '" + this.Extension + "' on Minify action.");
+        }
+    };
+
+    // any custom properties found on in the json config for this bundle
+    for (var prop in config) {
+        if (!this[prop]) {
+            this[prop] = config[prop];
+        }
+    }
 }
 
-gulp.task("clean-bunder-output", function () {
+// recursively build out list of files in a bundle
+function BuildListOfFiles(bundle, bundlesList) {
+    var bundleFiles = [];
+
+    if (bundle && bundle.Files && bundle.Files.length) {
+        for (var i = 0; i < bundle.Files.length; i++) {
+
+            // if "file" is found as a bundle name, recursively get that bundle's files
+            var existingBundle = bundlesList.filter(function (b) {
+                return b.Name === bundle.Files[i];
+            });
+
+            if (existingBundle && existingBundle.length) {
+                bundleFiles = bundleFiles.concat(BuildFiles(existingBundle[0], bundlesList));
+            } else {
+                var file = bundle.Files[i];
+                if (basePath && basePath.length)
+                    file = basePath + file;
+                bundleFiles.push(file);
+            }
+        }
+    }
+
+    return bundleFiles;
+}
+
+function BundleFiles(bundles, newerOnly) {
+    if (bundles && bundles.length) {
+        console.log("*** Starting bundling. Newer Only: " + newerOnly + " ***");
+
+        var completedCount = 0,
+            totalBundleCount = bundles.length;
+
+        console.log("Bundle count: " + totalBundleCount);
+
+        for (var i = 0; i < totalBundleCount; i++) {
+            var bundle = bundles[i];
+
+            if (ToBool(bundle.ReferenceOnly)) {
+                console.log("Bundle for " + bundle.Name + " is set to only be referenced. No bundling for this bundle.");
+
+                if (bundle.StaticOutputPath) {
+                    (function (bundle) {
+                        var gulpTask = gulp.src(basePath + bundle.StaticOutputPath, { base: "." })
+                            .on("end", function () {
+                                console.log("Bundle " + bundle.Name + " marked as have a *static output* of '" + bundle.StaticOutputPath + "'. It will have it's static output copied to destination.");
+                            })
+                            .pipe(bundle.Concat())
+                            .pipe(gulp.dest("."))
+                            .on("end", function () {
+                                completedCount++;
+                                console.log("Static Output '" + bundle.StaticOutputPath + "' copied to '" + bundle.OutputPath + "'.")
+                            });
+                    })(bundle);
+                } else {
+                    completedCount++;
+                }
+
+                continue;
+            }
+
+            var files = BuildListOfFiles(bundle, bundles),
+                gulpTask = gulp.src(files, { base: "." });
+
+            if (newerOnly) {
+                gulpTask = gulpTask.pipe(newer(bundle.OutputPath));
+            }
+
+            (function (bundle, files) {
+                gulpTask
+                    .on("end", function () {
+                        console.log("Bundling " + bundle.Name + " ... ");
+                        for (var i = 0; i < files.length; i++) {
+                            console.log(" - Includes file " + files[i] + ".");
+                        }
+                    })
+                    .pipe(bundle.Concat())
+                    .pipe(bundle.Minify())
+                    .pipe(gulp.dest("."))
+                    .on("end", function () {
+                        completedCount++
+
+                        if (completedCount == totalBundleCount) {
+                            console.log("*** Bundling process complete. ***");
+                        }
+                    });
+            })(bundle, files);
+        }
+    } else {
+        console.log("No bundles found.");
+    }
+}
+
+gulp.task("clean-output", function () {
 
     var _gulp = gulp;
 
@@ -143,131 +199,14 @@ gulp.task("clean-bunder-output", function () {
     return _gulp;
 });
 
-function BundleJS(newerOnly) {
-    if (scriptBundles && scriptBundles.length) {
-        console.log("*** Starting JS bundling. Newer Only: " + newerOnly + " ***");
-
-        var completedCount = 0,
-            totalBundleCount = scriptBundles.length;
-
-        for (var i = 0; i < totalBundleCount; i++) {
-            var scriptBundle = scriptBundles[i];
-
-            var dest = settings.paths.scriptsDestDirectory;
-            dest += scriptBundle.subpath || "";
-
-            if (dest.slice(-1) != "/") { dest += "/"; }
-
-            dest += scriptBundle.filename || (scriptBundle.name + ".min.js");
-
-            if (ToBool(scriptBundle.referenceOnly)) {
-                console.log("Bundle for " + scriptBundle.name + " is set to only be referenced. No bundling for this bundle.");
-
-                if (scriptBundle.staticOutputPath) {
-                    (function (scriptBundle, dest) {
-                        var gulpTask = gulp.src(settings.basePath + scriptBundle.staticOutputPath, { base: "." })
-                            .on("end", function () {
-                                console.log("Bundle " + scriptBundle.name + " marked as have a *static output* of '" + scriptBundle.staticOutputPath + "'. It will have it's static output copied to destination.");
-                            })
-                            .pipe(concat(dest))
-                            .pipe(gulp.dest("."))
-                            .on("end", function () {
-                                completedCount++;
-                                console.log("Static Output '" + scriptBundle.staticOutputPath + "' copied to '" + dest + "'.")
-                            });
-                    })(scriptBundle, dest);
-
-                } else {
-                    completedCount++;
-                }
-
-                continue;
-            }
-
-            var files = BuildFiles(scriptBundle, scriptBundles); //get list of files for this bundle
-            var gulpTask = gulp.src(files, { base: "." });
-
-            if (newerOnly) {
-                gulpTask = gulpTask.pipe(newer(dest));
-            }
-
-            (function (name, files) {
-                gulpTask
-                    .on("end", function () {
-                        console.log("Bundling " + name + " ... ");
-                        for (var i = 0; i < files.length; i++) {
-                            console.log(" - Includes file " + files[i] + ".");
-                        }
-                    })
-                    .pipe(concat(dest))
-                    .pipe(uglify())
-                    .pipe(gulp.dest("."))
-                    .on("end", function () {
-                        completedCount++
-
-                        if (completedCount == totalBundleCount) {
-                            console.log("*** Bundling JS process complete. ***");
-                        }
-                    });
-            })(scriptBundle.name, files);
-        }
-    } else {
-        console.log("No JS bundles found.");
-    }
-}
-
-function Bundle() {
-
-}
-
-gulp.task("bundle-js", function () {
-
-    var bundlingArguments = {
-        // flag to only updated bundle files if the script file is newer
-        // defaulted to "true" for quicker local builds
-        // process.argv.newerOnly is an optional parameter to set this value - intened as part of CI/build process
-        NewerOnly: new BoolArgument(process.argv, "--newerOnly", true)
-    };
-
-    BundleJS(bundlingArguments.NewerOnly.Value);
+gulp.task("bundle", function () {
+    BundleFiles(bundleConfigs.map(function (item) {
+        return new Bundle(item, bunderSettings);
+    }), true);
 });
 
-gulp.task("bundle-js-full", ["clean-js"], function () {
-    BundleJS(false);
-});
-
-
-
-gulp.task("bundle-css", function () {
-
-    if (styleBundles && styleBundles.length) {
-        for (var i = 0; i < styleBundles.length; i++) {
-            var styleBundle = styleBundles[i];
-            if (ToBool(styleBundle.referenceOnly)) {
-                console.log("Bundle for " + styleBundle.name + " is set to only be referenced. No bundling for this bundle.")
-                continue;
-            }
-
-            console.log("Bundling " + styleBundle.name + " ... ");
-
-            var files = BuildFiles(styleBundle, styleBundles); //get list of files for this bundle
-
-            var dest = settings.paths.stylesDestDirectory;
-            dest += styleBundle.subpath || "";
-
-            if (dest.slice(-1) != "/") { dest += "/"; }
-
-            dest += styleBundle.filename || (styleBundle.name + ".min.css");
-
-            gulp.src(files, { base: "." })
-                .pipe(concat(dest))
-                .pipe(cssmin())
-                .pipe(gulp.dest("."));
-        }
-    }
-    else {
-        console.log("No CSS bundles found.");
-    }
-
-    console.log("Bundling CSS process complete.");
+gulp.task("bundle-full", ["clean-output"], function () {
+    BundleFiles(bundleConfigs.map(function (item) {
+        return new Bundle(item, bunderSettings);
+    }), false);
 });

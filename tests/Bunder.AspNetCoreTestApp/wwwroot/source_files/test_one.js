@@ -1,1 +1,10 @@
-﻿
+﻿(function () {
+
+    // comments
+    alert("one");
+
+
+
+
+
+})();
