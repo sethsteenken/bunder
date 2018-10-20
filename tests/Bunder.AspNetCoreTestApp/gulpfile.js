@@ -1,4 +1,5 @@
-﻿"use strict";
+﻿/// <binding AfterBuild='bundle' />
+"use strict";
 
 var gulp = require("gulp"),
     concat = require("gulp-concat"),
@@ -10,7 +11,7 @@ var gulp = require("gulp"),
 // get Bunder settings and bundle definitions from json config files
 var bunderSettings = require("./appsettings.json").Bunder,
     basePath = "./wwwroot/",
-    bundleConfigs = require("./bundles.json");
+    bundleConfigs = require("./" + bunderSettings.BundlesConfigFilePath);
 
 function ToBool(value) {
     if (value === undefined) {
@@ -33,7 +34,7 @@ function ToBool(value) {
     }
 }
 
-function Bundle(config, bunderSettings) {
+function Bundle(config, bunderSettings, basePath) {
     if (!config) {
         throw new Error("Bundle config paramater null.");
     }
@@ -55,7 +56,7 @@ function Bundle(config, bunderSettings) {
     this.OutputDirectory = config.OutputDirectory || bunderSettings.OutputDirectories[this.Extension] || "";
 
     // build output path
-    var _outputPath = this.OutputDirectory + this.SubPath;
+    var _outputPath = (basePath || "") + this.OutputDirectory + this.SubPath;
     if (_outputPath.slice(-1) != "/") {
         _outputPath += "/";
     }
@@ -99,7 +100,7 @@ function BuildListOfFiles(bundle, bundlesList) {
             });
 
             if (existingBundle && existingBundle.length) {
-                bundleFiles = bundleFiles.concat(BuildFiles(existingBundle[0], bundlesList));
+                bundleFiles = bundleFiles.concat(BuildListOfFiles(existingBundle[0], bundlesList));
             } else {
                 var file = bundle.Files[i];
                 if (basePath && basePath.length)
@@ -181,13 +182,11 @@ function BundleFiles(bundles, newerOnly) {
 
 gulp.task("clean-output", function () {
 
-    var _gulp = gulp;
-
     if (bunderSettings && bunderSettings.OutputDirectories) {
-        for (var i = 0; i < bunderSettings.OutputDirectories.length; i++) {
-            _gulp = _gulp.src(bunderSettings.OutputDirectories[i][1], { read: false })
+        for (var ext in bunderSettings.OutputDirectories) {
+            gulp.src(bunderSettings.OutputDirectories[ext], { read: false })
                 .on("end", function () {
-                    console.log("* Cleaning destintation '" + bunderSettings.OutputDirectories[i][1] + "'... *");
+                    console.log("* Cleaning destintation '" + bunderSettings.OutputDirectories[ext] + "'... *");
                 })
                 .pipe(clean())
                 .on("end", function () {
@@ -195,18 +194,16 @@ gulp.task("clean-output", function () {
                 });
         }
     }
-
-    return _gulp;
 });
 
 gulp.task("bundle", function () {
     BundleFiles(bundleConfigs.map(function (item) {
-        return new Bundle(item, bunderSettings);
+        return new Bundle(item, bunderSettings, basePath);
     }), true);
 });
 
 gulp.task("bundle-full", ["clean-output"], function () {
     BundleFiles(bundleConfigs.map(function (item) {
-        return new Bundle(item, bunderSettings);
+        return new Bundle(item, bunderSettings, basePath);
     }), false);
 });

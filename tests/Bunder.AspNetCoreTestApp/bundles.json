@@ -1,5 +1,11 @@
 [
   {
+    "Name": "style-bundle",
+    "Files": [
+      "source_files/styles.css"
+    ]
+  },
+  {
     "Name": "my-bundle-one",
     "Files": [
       "source_files/test_one.js",
@@ -17,7 +23,7 @@
   {
     "Name": "my-bundle-three",
     "Files": [
-      "source_files/test_two.js",
+      "my-bundle-one",
       "source_files/test_three.js"
     ]
   },
