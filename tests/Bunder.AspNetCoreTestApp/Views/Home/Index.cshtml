@@ -5,8 +5,8 @@
     {
         "my-bundle-one",
         "my-bundle-two",
-        "my-bundle-three",
-        "my-bundle-four"
+        //"my-bundle-three",
+        //"my-bundle-four"
     };
 
     string styleBundleTest = "style-bundle";
@@ -26,11 +26,11 @@
 <p></p>
 
 <h2>@styleBundleTest</h2>
-<link asset="@styleBundleTest" />
+<link asset="@styleBundleTest" use-bundled-output="true" />
 
 @foreach (var bundleName in bundleTests)
 {
     <h2>@bundleName</h2>
-    <script asset="@bundleName"></script>
+    <script asset="@bundleName" use-versioning="false" use-bundled-output="true"></script>
 }
 

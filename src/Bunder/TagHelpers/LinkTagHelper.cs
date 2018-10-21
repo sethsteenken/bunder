@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Bunder.TagHelpers
 {
@@ -26,7 +25,7 @@ namespace Bunder.TagHelpers
                     continue;
                 }
 
-                output.PostContent.AppendHtml($"<link href='{path}' rel='stylesheet' />");
+                output.PostElement.AppendHtml($"<link href='{path}' rel='stylesheet' />");
             }
 
             return Task.CompletedTask;
