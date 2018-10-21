@@ -18,7 +18,7 @@ namespace Bunder.TagHelpers
         {
             for (int i = 0; i < assets.Count; i++)
             {
-                string path = HttpUtility.UrlEncode(assets[i].Value);
+                string path = assets[i].Value;
 
                 if (i == 0)
                 {

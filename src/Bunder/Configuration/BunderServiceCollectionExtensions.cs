@@ -93,6 +93,8 @@ namespace Bunder
                 );
             });
 
+            services.AddHttpContextAccessor();
+
             services.TryAddScoped<IPathFormatter>((serviceProvider) =>
             {
                 return new UrlPathFormatter(

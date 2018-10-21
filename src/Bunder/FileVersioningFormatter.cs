@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using System;
@@ -32,7 +31,7 @@ namespace Bunder
         /// <param name="basePath">Base url/path. Typically the base url of the current request.</param>
         /// <param name="virtualPath">Path to be versioned.</param>
         /// <returns></returns>
-        public string GetVersionedPath(PathString basePath, string virtualPath)
+        public string GetVersionedPath(string basePath, string virtualPath)
         {
             Guard.IsNotNull(basePath, nameof(basePath));
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
@@ -55,10 +54,10 @@ namespace Bunder
             var fileInfo = _fileProvider.GetFileInfo(resolvedPath);
 
             if (!fileInfo.Exists &&
-                basePath.HasValue &&
-                resolvedPath.StartsWith(basePath.Value, StringComparison.OrdinalIgnoreCase))
+                !string.IsNullOrWhiteSpace(basePath) &&
+                resolvedPath.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
             {
-                var requestPathBaseRelativePath = resolvedPath.Substring(basePath.Value.Length);
+                var requestPathBaseRelativePath = resolvedPath.Substring(basePath.Length);
                 cacheEntryOptions.AddExpirationToken(_fileProvider.Watch(requestPathBaseRelativePath));
                 fileInfo = _fileProvider.GetFileInfo(requestPathBaseRelativePath);
             }

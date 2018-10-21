@@ -13,6 +13,6 @@ namespace Bunder
         /// <param name="basePath">Base url/path. Typically the base url of the current request.</param>
         /// <param name="virtualPath">Path to be versioned.</param>
         /// <returns></returns>
-        string GetVersionedPath(PathString basePath, string virtualPath);
+        string GetVersionedPath(string basePath, string virtualPath);
     }
 }

@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Bunder Test";
+
+    var bundleTests = new List<string>()
+    {
+        "my-bundle-one",
+        "my-bundle-two",
+        "my-bundle-three",
+        "my-bundle-four"
+    };
+
+    string styleBundleTest = "style-bundle";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Rendering the following tags using Bunder:</p>
+<ul>
+    <li>@styleBundleTest</li>
+    @foreach (var bundleName in bundleTests)
+    {
+        <li>@bundleName</li>
+    }
+</ul>
+
+<p></p>
+
+<h2>@styleBundleTest</h2>
+<link asset="@styleBundleTest" />
+
+@foreach (var bundleName in bundleTests)
+{
+    <h2>@bundleName</h2>
+    <script asset="@bundleName"></script>
+}
+
