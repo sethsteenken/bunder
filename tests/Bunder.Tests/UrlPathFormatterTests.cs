@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Moq;
+﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Xunit;
 
 namespace Bunder.Tests
@@ -60,7 +56,7 @@ namespace Bunder.Tests
             var result = formatter.GetFullPath(path, includeVersioning: true);
             string expected = baseUrl + (path.StartsWith("/") ? path.Substring(1) : path) + versionIndicator;
 
-            versioningFormatter.Verify(v => v.GetVersionedPath(It.IsAny<PathString>(), It.IsAny<string>()), Times.Once);
+            versioningFormatter.Verify(v => v.GetVersionedPath(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.Equal(expected, result);
         }
     }
