@@ -10,7 +10,7 @@ namespace Bunder.Tests
         private const string _bundleNameTwo = "bundle-two";
         private const string _bundleNameThree = "Bundle-Three";
 
-        private static readonly IEnumerable<Bundle> _testBundles = new List<Bundle>()
+        private readonly static IEnumerable<Bundle> _testBundles = new List<Bundle>()
         {
             new Bundle(_bundleNameOne, "js", "/my/output", new string[] { "/bundle/source/one.js", "/bundle/source/two.js" }),
             new Bundle(_bundleNameTwo, "js", "/my/output", new string[] { "/single/file.js" }),

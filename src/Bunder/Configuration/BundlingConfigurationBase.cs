@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Bunder
 {
@@ -26,11 +27,17 @@ namespace Bunder
         public virtual IEnumerable<Bundle> Build()
         {
             var bundleConfigs = GetBundleConfiguration();
+            var bundles = new List<Bundle>();
 
             foreach (var bundleConfig in bundleConfigs)
             {
                 if (bundleConfig.Files == null || bundleConfig.Files.Count == 0)
-                    throw new InvalidOperationException("Bundle must have at least one file under Files reference.");
+                    throw new BundleConfigurationException("Bundle must have at least one file under Files reference.");
+
+                if (bundles.Any(b => string.Compare(b.Name, bundleConfig.Name, StringComparison.InvariantCultureIgnoreCase) == 0))
+                    throw new BundleConfigurationException($"A bundle with the name '{bundleConfig.Name}' has already been registered. " +
+                        $"Ensure all Bundle Name values created under {typeof(BundleConfig).FullName} " +
+                        $"created from {typeof(IBundlingConfiguration).FullName} implementation are unique.");
 
                 string fileExtension = Path.GetExtension(string.IsNullOrWhiteSpace(bundleConfig.OutputFileName) 
                                             ? bundleConfig.Files[0] 
@@ -40,16 +47,16 @@ namespace Bunder
                 if (string.IsNullOrWhiteSpace(outputDirectory) && OutputDirectoryLookup.TryGetValue(fileExtension, out string outputDir))
                     outputDirectory = outputDir;
 
-                // TODO - add validation here?
-
-                yield return new Bundle(
+                bundles.Add(new Bundle(
                             bundleConfig.Name,
                             fileExtension,
                             outputDirectory,
                             bundleConfig.Files,
                             bundleConfig.OutputFileName,
-                            bundleConfig.SubPath);
+                            bundleConfig.SubPath));
             }
+
+            return bundles;
         }
     }
 }
