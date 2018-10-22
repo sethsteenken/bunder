@@ -59,6 +59,7 @@ namespace Bunder
             Guard.IsNotNull(services, nameof(services));
             
             services.TryAddSingleton<JsonSerializer>();
+            services.AddHttpContextAccessor();
 
             if (settings != null)
                 services.TryAddSingleton<BunderSettings>(settings);
@@ -89,17 +90,14 @@ namespace Bunder
             {
                 return new FileVersioningFormatter(
                     serviceProvider.GetRequiredService<IHostingEnvironment>().WebRootFileProvider,
-                    serviceProvider.GetService<IMemoryCache>()
-                );
+                    serviceProvider.GetService<IMemoryCache>());
             });
-
-            services.AddHttpContextAccessor();
 
             services.TryAddScoped<IPathFormatter>((serviceProvider) =>
             {
                 return new UrlPathFormatter(
-                                serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.GetBaseUrl(),
-                                serviceProvider.GetRequiredService<IVersioningFormatter>());
+                    serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.GetBaseUrl(),
+                    serviceProvider.GetRequiredService<IVersioningFormatter>());
             });
 
             services.TryAddScoped<IAssetResolver, AssetResolver>();

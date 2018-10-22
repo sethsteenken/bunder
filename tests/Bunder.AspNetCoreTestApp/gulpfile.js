@@ -11,10 +11,13 @@ var gulp = require("gulp"),
 // get Bunder settings and bundle definitions from json config files
 var bunderSettings = require("./appsettings.json").Bunder,
     basePath = "./wwwroot/",
-    bundleConfigs = require("./" + bunderSettings.BundlesConfigFilePath),
-    bundles = bundleConfigs.map(function (item) {
+    bundleConfigs = require("./" + bunderSettings.BundlesConfigFilePath);
+
+function CreateBundleList(bundleConfigs, bunderSettings, basePath) {
+    return bundleConfigs.map(function (item) {
         return new Bundle(item, bunderSettings, basePath);
     });
+}
 
 function ToBool(value) {
     if (value === undefined) {
@@ -53,10 +56,10 @@ function Bundle(config, bunderSettings, basePath) {
 
     this.Extension = _ext;
     this.Name = config.Name;
-    this.OutputFileName = config.OutputFileName || this.Name.replace(" ", "_") + ".min." + this.Extension;
-    this.SubPath = config.SubPath || "";
-    this.Files = config.Files;
-    this.OutputDirectory = config.OutputDirectory || bunderSettings.OutputDirectories[this.Extension] || "";
+    this.OutputFileName = config.Outputfilename || this.Name.replace(" ", "_") + ".min." + this.Extension;
+    this.SubPath = config.subpath || "";
+    this.Files = config.files;
+    this.OutputDirectory = config.outputdirectory || bunderSettings.OutputDirectories[this.Extension] || "";
 
     // build output path
     let _outputPath = (basePath || "") + this.OutputDirectory + this.SubPath;
@@ -83,7 +86,7 @@ function Bundle(config, bunderSettings, basePath) {
     };
 
     // any custom properties found on in the json config for this bundle
-    for (var prop in config) {
+    for (let prop in config) {
         if (!this[prop]) {
             this[prop] = config[prop];
         }
@@ -200,9 +203,9 @@ gulp.task("clean-output", function () {
 });
 
 gulp.task("bundle", function () {
-    BundleFiles(bundles, basePath, true);
+    BundleFiles(CreateBundleList(bundleConfigs, bunderSettings, basePath), basePath, true);
 });
 
 gulp.task("bundle-full", ["clean-output"], function () {
-    BundleFiles(bundles, basePath, false);
+    BundleFiles(CreateBundleList(bundleConfigs, bunderSettings, basePath), basePath, false);
 });
