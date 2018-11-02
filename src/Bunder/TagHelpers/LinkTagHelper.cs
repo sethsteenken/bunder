@@ -16,16 +16,14 @@ namespace Bunder.TagHelpers
         {
             for (int i = 0; i < assets.Count; i++)
             {
-                string path = assets[i].Value;
-
                 if (i == 0)
                 {
-                    output.Attributes.Add("href", path);
+                    output.Attributes.Add("href", assets[i].Value);
                     output.Attributes.Add("rel", "stylesheet");
                     continue;
                 }
 
-                output.PostElement.AppendHtml($"<link href='{path}' rel='stylesheet' />");
+                output.PostElement.AppendHtml($"<link href='{assets[i].Value}' rel='stylesheet' />");
             }
 
             return Task.CompletedTask;

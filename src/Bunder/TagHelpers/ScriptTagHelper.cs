@@ -17,15 +17,13 @@ namespace Bunder.TagHelpers
         {
             for (int i = 0; i < assets.Count; i++)
             {
-                string path = assets[i].Value;
-
                 if (i == 0)
                 {
-                    output.Attributes.Add("src", path);
+                    output.Attributes.Add("src", assets[i].Value);
                     continue;
                 }
 
-                output.PostElement.AppendHtml($"<script src='{path}'></script>");
+                output.PostElement.AppendHtml($"<script src='{assets[i].Value}'></script>");
             }
 
             return Task.CompletedTask;
