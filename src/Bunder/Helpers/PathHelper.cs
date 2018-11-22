@@ -36,11 +36,6 @@ namespace Bunder
             newSlash = fileSystem ? Path.DirectorySeparatorChar : Path.AltDirectorySeparatorChar;
         }
 
-        private static void DetermineCharsToAdjust(string path, out char slashToReplace, out char newSlash)
-        {
-            DetermineCharsToAdjust(IsFileSystemPath(path), out slashToReplace, out newSlash);
-        }
-
         private static bool IsFileSystemPath(string path)
         {
             return path?.Contains(Path.DirectorySeparatorChar.ToString()) ?? false;
