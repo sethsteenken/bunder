@@ -5,15 +5,36 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>../../signing.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Bunder.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1701;1702;CS1591</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <Authors>Seth Steenken</Authors>
+    <Product>Bunder</Product>
+    <Description>Bunder is a .NET Core AspNetCore front-end asset bundling manager and rendering handler.</Description>
+    <Copyright>Copyright © Seth Steenken 2018</Copyright>
+    <Summary>Bunder is a .NET Core AspNetCore front-end asset bundling manager and rendering handler.</Summary>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Title>Bunder</Title>
+    <PackageId>Bunder</PackageId>
+    <PackageTags>AspNetCore bundling assets scripts tags</PackageTags>
+    <PackageProjectUrl>https://github.com/sethsteenken/Bunder</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/sethsteenken/Bunder/master/LICENSE</PackageLicenseUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RootNamespace>Bunder</RootNamespace>
+    <AssemblyName>Bunder</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
