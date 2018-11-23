@@ -29,6 +29,8 @@
     <RootNamespace>Bunder</RootNamespace>
     <AssemblyName>Bunder</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Include symbol files (*.pdb) in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
