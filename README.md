@@ -27,7 +27,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ### Bundle Configurations
-By default, bundle configurations are searlized from a JSON file at bundles.json.
+By default, bundle configurations are serialized from a JSON file at bundles.json.
 
 Bundles.json:
 ```json
