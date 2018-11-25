@@ -60,7 +60,6 @@ Bundles.json:
 By default, Bunder will pull configuration settings from "Bunder" section of appsettings.json.
 ```json
 {
-  ...
   "Bunder": {
     "UseBundledOutput": true,
     "UseVersioning": true,
@@ -70,8 +69,17 @@ By default, Bunder will pull configuration settings from "Bunder" section of app
       "css": "/output/css"
     }
   }
-  ...
 }
+```
+
+### View Settings
+Update _ViewImports.cshtml file to include Bunder and its tag helpers.
+
+```cshtml
+@using Bunder;
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Bunder
 ```
 
 ## Use
