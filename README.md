@@ -1,7 +1,7 @@
 # Bunder
 > AspNetCore bundle handler and renderer. 
 
-Alternative to AspNetCore's [bundling process](https://docs.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-2.1&tabs=visual-studio) by utliziing shared json configuration for bundles and tag helpers for rendering assets similar to ASP.NET MVC's bundling process with Script.Render("~/bundle/path"). Relies on outside task runner like Gulp or Grunt to perform the minification / bundling with the intention for said tasks to utilize the same json configuration used by Bunder.
+Alternative to AspNetCore's [bundling process](https://docs.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-2.1&tabs=visual-studio) by utliziing shared json configuration for bundles and tag helpers for rendering assets similar to ASP.NET MVC's bundling process with BundleConfig.cs and Script.Render("~/bundle/path"). Relies on outside task runner like Gulp or Grunt to perform the minification / bundling with the intention for said tasks to utilize the same json configuration used by Bunder. Companion node module [gulp-bunder](https://github.com/sethsteenken/gulp-bunder) coming soon!
 
 [![Build status](https://sethsteenken.visualstudio.com/Bunder%20DevOps/_apis/build/status/Bunder%20DevOps%20CI)](https://sethsteenken.visualstudio.com/Bunder%20DevOps/_build/latest?definitionId=1)
 
