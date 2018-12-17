@@ -1,7 +1,7 @@
 # Bunder
 > AspNetCore bundle handler and renderer. 
 
-Alternative to AspNetCore's [bundling process](https://docs.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-2.1&tabs=visual-studio) by utliziing shared json configuration for bundles and tag helpers for rendering assets similar to ASP.NET MVC's bundling process with BundleConfig.cs and Script.Render("~/bundle/path"). Relies on outside task runner like Gulp or Grunt to perform the minification / bundling with the intention for said tasks to utilize the same json configuration used by Bunder. Companion node module [gulp-bunder](https://github.com/sethsteenken/gulp-bunder) coming soon!
+Alternative to AspNetCore's [bundling process](https://docs.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-2.1&tabs=visual-studio) by utliziing shared json configuration for bundles and tag helpers for rendering assets similar to ASP.NET MVC's bundling process with BundleConfig.cs and Script.Render("~/bundle/path"). Relies on outside task runner like Gulp or Grunt to perform the minification / bundling with the intention for said tasks to utilize the same json configuration used by Bunder. Companion node module [gulp-bunder](https://github.com/sethsteenken/gulp-bunder) can be used with gulp to perform the minification and concatenation from the same bundles.json used by Bunder. 
 
 [![Build status](https://sethsteenken.visualstudio.com/Bunder%20DevOps/_apis/build/status/Bunder%20DevOps%20CI)](https://sethsteenken.visualstudio.com/Bunder%20DevOps/_build/latest?definitionId=1)
 
@@ -100,6 +100,7 @@ branch. Pull requests are more than welcome!
 - Project / Repository: https://github.com/sethsteenken/Bunder
 - Issue tracker: https://github.com/sethsteenken/Bunder/issues
 - Related projects:
+  - gulp-bunder: https://github.com/sethsteenken/gulp-bunder
   - Integreat: https://github.com/sethsteenken/Integreat
   - NetAssist: https://github.com/sethsteenken/net-assist
 
