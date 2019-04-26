@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
@@ -86,13 +85,7 @@ namespace Bunder
             
             services.TryAddSingleton<IEnumerable<Bundle>>((serviceProvider) => serviceProvider.GetRequiredService<IBundlingConfiguration>().Build());
             services.TryAddSingleton<IBundleLookup, BundleLookup>();
-            services.TryAddSingleton<IVersioningFormatter>((serviceProvider) =>
-            {
-                return new FileVersioningFormatter(
-                    serviceProvider.GetRequiredService<IHostingEnvironment>().WebRootFileProvider,
-                    serviceProvider.GetService<IMemoryCache>());
-            });
-
+            services.TryAddSingleton<IVersioningFormatter, FileVersioningFormatter>();
             services.TryAddScoped<IPathFormatter>((serviceProvider) =>
             {
                 return new UrlPathFormatter(

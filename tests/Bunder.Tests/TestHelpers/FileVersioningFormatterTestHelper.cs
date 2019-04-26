@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -9,23 +10,11 @@ namespace Bunder.Tests
 {
     internal class FileVersioningFormatterTestHelper
     {
-        public static FileVersioningFormatter BuildFormatter(IFileProvider fileProvider = null, IMemoryCache cache = null)
+        public static FileVersioningFormatter BuildFormatter(IFileVersionProvider fileVersionProvider = null)
         {
-            if (fileProvider == null)
-                fileProvider = new Mock<IFileProvider>().Object;
-
-            if (cache == null)
-            {
-                var entryMock = new Mock<ICacheEntry>();
-                entryMock.Setup(e => e.ExpirationTokens).Returns(new List<IChangeToken>() { new Mock<IChangeToken>().Object });
-
-                var cacheMock = new Mock<IMemoryCache>();
-                cacheMock.Setup(c => c.CreateEntry(It.IsAny<object>())).Returns(entryMock.Object);
-
-                cache = cacheMock.Object;
-            }
-              
-            return new FileVersioningFormatter(fileProvider, cache);
+            if (fileVersionProvider == null)
+                fileVersionProvider = new Mock<IFileVersionProvider>().Object;
+            return new FileVersioningFormatter(fileVersionProvider);
         }
 
         public static IFileProvider BuildFileProvider(string path, bool fileExists = true)
