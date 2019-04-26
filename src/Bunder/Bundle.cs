@@ -8,19 +8,13 @@ namespace Bunder
     /// </summary>
     public sealed class Bundle
     {
-        public Bundle(string name, string extension, string outputDirectory, IReadOnlyList<string> files)
-            : this (name, extension, outputDirectory, files, null)
-        {
-
-        }
-
-        public Bundle(string name, string extension, string outputDirectory, IReadOnlyList<string> files, string outputFileName)
-            : this(name, extension, outputDirectory, files, outputFileName, null)
-        {
-
-        }
-
-        public Bundle(string name, string extension, string outputDirectory, IReadOnlyList<string> files, string outputFileName, string subPath)
+        public Bundle(
+            string name, 
+            string extension, 
+            string outputDirectory,
+            IReadOnlyList<string> files, 
+            string outputFileName = null, 
+            string subPath = null)
         {
             Name = name?.Trim();
             FileExtension = extension?.Trim();

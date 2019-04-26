@@ -1,6 +1,4 @@
-﻿using System.Web;
-
-namespace Bunder
+﻿namespace Bunder
 {
     /// <summary>
     /// Model that represents a single item or asset with a <see cref="Asset.Value"/> representing the call to action or path.
