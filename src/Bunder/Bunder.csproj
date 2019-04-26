@@ -12,8 +12,10 @@
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0</FileVersion>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <InformationalVersion>1.0.1</InformationalVersion>
     <Authors>Seth Steenken</Authors>
     <Product>Bunder</Product>
     <Description>Bunder is a .NET Core AspNetCore front-end asset bundling manager and rendering handler.</Description>
@@ -22,15 +24,16 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Title>Bunder</Title>
     <PackageId>Bunder</PackageId>
-    <PackageTags>AspNetCore bundling assets scripts tags</PackageTags>
+    <PackageTags>AspNetCore bundling assets scripts styles js css html markup tags</PackageTags>
     <PackageProjectUrl>https://github.com/sethsteenken/Bunder</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/sethsteenken/Bunder/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RootNamespace>Bunder</RootNamespace>
     <AssemblyName>Bunder</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Include symbol files (*.pdb) in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   
   <ItemGroup>
@@ -48,6 +51,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
