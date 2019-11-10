@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 
@@ -57,7 +56,7 @@ namespace Bunder
         {
             Guard.IsNotNull(services, nameof(services));
             
-            services.TryAddSingleton<JsonSerializer>();
+            services.TryAddSingleton<ISerializer, SystemTextJsonSerializer>();
             services.AddHttpContextAccessor();
 
             if (settings != null)
@@ -78,7 +77,7 @@ namespace Bunder
                                                     bunderSettings.BundlesConfigFilePath);
 
                     return new BundlingJsonConfiguration(bunderSettings.OutputDirectories,
-                                    serviceProvider.GetRequiredService<JsonSerializer>(),
+                                    serviceProvider.GetRequiredService<ISerializer>(),
                                     configPath);
                 });
             }

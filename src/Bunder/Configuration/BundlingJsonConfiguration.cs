@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Bunder
@@ -9,10 +8,13 @@ namespace Bunder
     /// </summary>
     public class BundlingJsonConfiguration : BundlingConfigurationBase
     {
-        private readonly JsonSerializer _serializer;
+        private readonly ISerializer _serializer;
         private readonly string _filePath;
 
-        public BundlingJsonConfiguration(IDictionary<string, string> outputDirectoryLookup, JsonSerializer serializer, string filePath)
+        public BundlingJsonConfiguration(
+            IDictionary<string, string> outputDirectoryLookup,
+            ISerializer serializer, 
+            string filePath)
             : base(outputDirectoryLookup)
         {
             Guard.IsNotNull(serializer, nameof(serializer));
@@ -24,10 +26,7 @@ namespace Bunder
 
         protected override IReadOnlyList<BundleConfig> GetBundleConfiguration()
         {
-            using (StreamReader file = File.OpenText(_filePath))
-            {
-                return (List<BundleConfig>)_serializer.Deserialize(file, typeof(List<BundleConfig>));
-            }
+            return _serializer.Deserialize<List<BundleConfig>>(File.ReadAllText(_filePath));
         } 
     }
 }
