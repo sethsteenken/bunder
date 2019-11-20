@@ -8,12 +8,12 @@ namespace Bunder
     /// </summary>
     public class UrlPathFormatter : IPathFormatter
     {
-        private readonly string _baseUrl;
+        private readonly string _baseUrl = "/";
         private readonly IVersioningFormatter _versioningFormatter;
 
         public UrlPathFormatter(string baseUrl, IVersioningFormatter versioningFormatter)
         {
-            _baseUrl = baseUrl;
+            //_baseUrl = baseUrl;
             _versioningFormatter = versioningFormatter;
         }
 

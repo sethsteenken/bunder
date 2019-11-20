@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Bunder
 {
@@ -26,7 +27,7 @@ namespace Bunder
             Guard.IsNotNull(basePath, nameof(basePath));
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
 
-            return _fileVersionProvider.AddFileVersionToPath(basePath, virtualPath);
+            return _fileVersionProvider.AddFileVersionToPath(PathString.FromUriComponent(basePath), virtualPath);
         }
     }
 }
