@@ -8,12 +8,12 @@ namespace Bunder
     /// </summary>
     public class UrlPathFormatter : IPathFormatter
     {
-        private readonly string _baseUrl = "/";
+        private readonly string _baseUrl;
         private readonly IVersioningFormatter _versioningFormatter;
 
         public UrlPathFormatter(string baseUrl, IVersioningFormatter versioningFormatter)
         {
-            //_baseUrl = baseUrl;
+            _baseUrl = baseUrl;
             _versioningFormatter = versioningFormatter;
         }
 
@@ -28,7 +28,7 @@ namespace Bunder
             Guard.IsNotNull(virtualPath, nameof(virtualPath));
 
             if (includeVersioning)
-                virtualPath = _versioningFormatter.GetVersionedPath(_baseUrl, virtualPath);
+                virtualPath = _versioningFormatter.GetVersionedPath(virtualPath);
 
             if (!IsValidUri(virtualPath, out Uri uri))
                 throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.");
