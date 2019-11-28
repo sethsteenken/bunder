@@ -14,45 +14,17 @@ namespace Bunder
     {
         /// <summary>
         /// Register Bunder services with the service collection.
-        /// Settings at <see cref="BunderSettings"/> will be loaded from appsettings.json config section named "Bunder".
-        /// Bundling configuration <see cref="IBundlingConfiguration"/> will load configuration from json file at <see cref="IHostingEnvironment.ContentRootPath"/> + <see cref="BunderSettings.BundlesConfigFilePath"/>.
-        /// </summary>
-        /// <param name="services">Existing service collection on which to register Bunder services.</param>
-        public static IServiceCollection AddBunder(this IServiceCollection services)
-        {
-            return AddBunder(services, null, null);
-        }
-
-        /// <summary>
-        /// Register Bunder services with the service collection.
-        /// Bundling configuration <see cref="IBundlingConfiguration"/> will load configuration from json file at <see cref="IHostingEnvironment.ContentRootPath"/> + <see cref="BunderSettings.BundlesConfigFilePath"/>.
-        /// </summary>
-        /// <param name="services">Existing service collection on which to register Bunder services.</param>
-        /// <param name="settings">Custom settings object that will be stored as a singleton.</param>
-        public static IServiceCollection AddBunder(this IServiceCollection services, BunderSettings settings)
-        {
-            return AddBunder(services, settings, null);
-        }
-
-        /// <summary>
-        /// Register Bunder services with the service collection.
-        /// Settings at <see cref="BunderSettings"/> will be loaded from appsettings.json config section named "Bunder".
-        /// </summary>
-        /// <param name="services">Existing service collection on which to register Bunder services.</param>
-        /// <param name="bundlingConfiguration">Custom bundling configuration that will compile list of registered bundles.</param>
-        public static IServiceCollection AddBunder(this IServiceCollection services, IBundlingConfiguration bundlingConfiguration)
-        {
-            return AddBunder(services, null, bundlingConfiguration);
-        }
-
-        /// <summary>
-        /// Register Bunder services with the service collection.
         /// Parameters allow for custom settings. If parameters are null, default json-based configuration will be applied.
+        /// Settings at <see cref="BunderSettings"/> will be loaded from appsettings.json config section named "Bunder".
+        /// Bundling configuration <see cref="IBundlingConfiguration"/> will load configuration from json file at <see cref="IHostingEnvironment.ContentRootPath"/> + <see cref="BunderSettings.BundlesConfigFilePath"/>.
         /// </summary>
         /// <param name="services">Existing service collection on which to register Bunder services.</param>
         /// <param name="settings">Custom settings object that will be stored as a singleton.</param>
         /// <param name="bundlingConfiguration">Custom bundling configuration that will compile list of registered bundles.</param>
-        public static IServiceCollection AddBunder(this IServiceCollection services, BunderSettings settings, IBundlingConfiguration bundlingConfiguration)
+        public static IServiceCollection AddBunder(
+            this IServiceCollection services, 
+            BunderSettings settings = null, 
+            IBundlingConfiguration bundlingConfiguration = null)
         {
             Guard.IsNotNull(services, nameof(services));
             
