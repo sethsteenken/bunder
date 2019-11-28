@@ -49,14 +49,14 @@ namespace Bunder.Tests
             const string versionIndicator = "?v=versioned";
 
             var versioningFormatter = new Mock<IVersioningFormatter>();
-            versioningFormatter.Setup(v => v.GetVersionedPath(baseUrl, path)).Returns($"{path}{versionIndicator}");
+            versioningFormatter.Setup(v => v.GetVersionedPath(path)).Returns($"{path}{versionIndicator}");
 
             var formatter = UrlPathFormatterTestHelper.BuildFormatter(baseUrl: baseUrl, versioningFormatter: versioningFormatter.Object);
 
             var result = formatter.GetFullPath(path, includeVersioning: true);
             string expected = baseUrl + (path.StartsWith("/") ? path.Substring(1) : path) + versionIndicator;
 
-            versioningFormatter.Verify(v => v.GetVersionedPath(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            versioningFormatter.Verify(v => v.GetVersionedPath(It.IsAny<string>()), Times.Once);
             Assert.Equal(expected, result);
         }
     }

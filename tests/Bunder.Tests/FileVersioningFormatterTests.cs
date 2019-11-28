@@ -12,9 +12,7 @@ namespace Bunder.Tests
         public void GetVersionedPath_ThrowsException_IfAnyParametersAreNull()
         {
             var formatter = FileVersioningFormatterTestHelper.BuildFormatter();
-
-            Assert.Throws<ArgumentNullException>(() => formatter.GetVersionedPath(null, "/some/virtual/path.jpg"));
-            Assert.Throws<ArgumentNullException>(() => formatter.GetVersionedPath(new PathString("/my/pathstring.jpg"), null));
+            Assert.Throws<ArgumentNullException>(() => formatter.GetVersionedPath(null));
         }
     }
 }
