@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Bunder
 {
@@ -45,12 +45,18 @@ namespace Bunder
                 services.TryAddSingleton<IBundlingConfiguration>((serviceProvider) =>
                 {
                     var bunderSettings = serviceProvider.GetRequiredService<BunderSettings>();
-                    string configPath = Path.Combine(serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath,
-                                                    bunderSettings.BundlesConfigFilePath);
+
+                    var fileProvider = serviceProvider.GetService<IFileProvider>();
+                    if (fileProvider == null)
+                        fileProvider = serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootFileProvider;
+                                                      
+                    var file = fileProvider.GetFileInfo(bunderSettings.BundlesConfigFilePath);
+                    if (file == null || !file.Exists)
+                        throw new BundleConfigurationException($"Configuration file {bunderSettings.BundlesConfigFilePath} was not found.");
 
                     return new BundlingJsonConfiguration(bunderSettings.OutputDirectories,
                                     serviceProvider.GetRequiredService<ISerializer>(),
-                                    configPath);
+                                    file.PhysicalPath);
                 });
             }
             

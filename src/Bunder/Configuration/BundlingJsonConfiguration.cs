@@ -13,7 +13,7 @@ namespace Bunder
 
         public BundlingJsonConfiguration(
             IDictionary<string, string> outputDirectoryLookup,
-            ISerializer serializer, 
+            ISerializer serializer,
             string filePath)
             : base(outputDirectoryLookup)
         {
