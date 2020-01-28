@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
@@ -20,10 +21,10 @@ namespace Bunder
         /// </summary>
         /// <param name="services">Existing service collection on which to register Bunder services.</param>
         /// <param name="settings">Custom settings object that will be stored as a singleton.</param>
-        /// <param name="bundlingConfiguration">Custom bundling configuration that will compile list of registered bundles.</param>
+        /// <param name="bundlingConfiguration">Optional custom bundling configuration that will compile list of registered bundles. By default, values under <see cref="BunderSettings"/> will be used to construct default bundling configuration.</param>
         public static IServiceCollection AddBunder(
             this IServiceCollection services, 
-            BunderSettings settings = null, 
+            BunderSettings settings, 
             IBundlingConfiguration bundlingConfiguration = null)
         {
             Guard.IsNotNull(services, nameof(services));
@@ -31,11 +32,8 @@ namespace Bunder
             services.TryAddSingleton<ISerializer, SystemTextJsonSerializer>();
             services.AddHttpContextAccessor();
 
-            if (settings != null)
-                services.TryAddSingleton<BunderSettings>(settings);
-            else
-                services.AddCustomConfigurationSettings<BunderSettings>(BunderSettings.DefaultSectionName, singleton: true);
-
+            services.TryAddSingleton<BunderSettings>(settings ?? new BunderSettings());
+   
             if (bundlingConfiguration != null)
             {
                 services.TryAddSingleton<IBundlingConfiguration>(bundlingConfiguration);
@@ -73,6 +71,33 @@ namespace Bunder
             services.TryAddScoped<IAssetResolver, AssetResolver>();
 
             return services;
+        }
+
+        /// <summary>
+        /// Register Bunder services with the service collection.
+        /// Configuration will be utilized to bind section under <paramref name="sectionName"/> to settings <see cref="BunderSettings"/>.
+        /// Bundling configuration <see cref="IBundlingConfiguration"/> will load configuration from json file at <see cref="IHostingEnvironment.ContentRootPath"/> + <see cref="BunderSettings.BundlesConfigFilePath"/>. 
+        /// </summary>
+        /// <param name="services">Existing service collection on which to register Bunder services.</param>
+        /// <param name="configuration">Established configuration from the executing application.</param>
+        /// <param name="sectionName">Optional section name under the configuration <paramref name="configuration"/>. Defaults to "Bunder".</param>
+        /// <param name="bundlingConfiguration">Optional custom bundling configuration that will compile list of registered bundles. By default, values under <see cref="BunderSettings"/> will be used to construct default bundling configuration.</param>
+        /// <returns></returns>
+        public static IServiceCollection AddBunder(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            string sectionName = "Bunder",
+            IBundlingConfiguration bundlingConfiguration = null)
+        {
+            Guard.IsNotNull(services, nameof(services));
+            Guard.IsNotNull(configuration, nameof(configuration));
+            Guard.IsNotNull(sectionName, nameof(sectionName));
+
+            var bunderSection = configuration.GetSection(sectionName, required: true);
+            var settings = new BunderSettings();
+            bunderSection.Bind(settings);
+
+            return AddBunder(services, settings, bundlingConfiguration);
         }
     }
 }
