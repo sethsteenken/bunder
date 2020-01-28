@@ -5,7 +5,10 @@ namespace Bunder.Tests
 {
     internal static class AssetResolverTestHelper
     {
-        public static AssetResolver BuildTestResolver(IBundleLookup bundleLookup = null, IPathFormatter pathFormatter = null)
+        public static AssetResolver BuildTestResolver(
+            IBundleLookup bundleLookup = null, 
+            IPathFormatter pathFormatter = null,
+            BunderSettings settings = null)
         {
             if (bundleLookup == null)
                 bundleLookup = new Mock<IBundleLookup>().Object;
@@ -13,7 +16,10 @@ namespace Bunder.Tests
             if (pathFormatter == null)
                 pathFormatter = new MockPathFormatter();
 
-            return new AssetResolver(bundleLookup, pathFormatter);
+            if (settings == null)
+                settings = new BunderSettings();
+
+            return new AssetResolver(bundleLookup, pathFormatter, settings);
         }
 
         public static AssetResolutionContext BuildValidResolutionContext()

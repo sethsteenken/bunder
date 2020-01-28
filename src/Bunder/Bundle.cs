@@ -12,7 +12,7 @@ namespace Bunder
             string name, 
             string extension, 
             string outputDirectory,
-            IReadOnlyList<string> files, 
+            IEnumerable<string> files, 
             string outputFileName = null, 
             string subPath = null)
         {
@@ -43,7 +43,7 @@ namespace Bunder
         /// <summary>
         /// List of file paths that represent the content of the bundle.
         /// </summary>
-        public IReadOnlyList<string> Files { get; private set; }
+        public IEnumerable<string> Files { get; private set; }
 
         /// <summary>
         /// The file extension intended for both all the list of <see cref="Files"/> and the <see cref="OutputFileName"/>.

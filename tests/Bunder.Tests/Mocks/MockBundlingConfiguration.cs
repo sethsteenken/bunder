@@ -6,7 +6,7 @@ namespace Bunder.Tests
     // NOTE: Using public declaration to allow Moq to mock this class for testing.
     public class MockBundlingConfiguration : BundlingConfigurationBase
     {
-        private readonly Func<IReadOnlyList<BundleConfig>> _getBundleConfigurations;
+        private readonly Func<IEnumerable<BundleConfig>> _getBundleConfigurations;
 
         public MockBundlingConfiguration()
             : this (getBundleConfigurations: null)
@@ -19,13 +19,13 @@ namespace Bunder.Tests
         {
         }
 
-        public MockBundlingConfiguration(Func<IReadOnlyList<BundleConfig>> getBundleConfigurations)
+        public MockBundlingConfiguration(Func<IEnumerable<BundleConfig>> getBundleConfigurations)
             : base(new Dictionary<string, string>())
         {
             _getBundleConfigurations = getBundleConfigurations ?? (() => new List<BundleConfig>());
         }
 
-        protected override IReadOnlyList<BundleConfig> GetBundleConfiguration()
+        protected override IEnumerable<BundleConfig> GetBundleConfiguration()
         {
             return _getBundleConfigurations.Invoke();
         }

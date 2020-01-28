@@ -8,14 +8,19 @@ namespace Bunder
     /// </summary>
     public class AssetResolver : IAssetResolver
     {
-        private readonly IBundleLookup _bundleLookup;
-        private readonly IPathFormatter _pathFormatter;
-
-        public AssetResolver(IBundleLookup bundleLookup, IPathFormatter pathFormatter)
+        public AssetResolver(
+            IBundleLookup bundleLookup, 
+            IPathFormatter pathFormatter,
+            BunderSettings settings)
         {
-            _bundleLookup = bundleLookup;
-            _pathFormatter = pathFormatter;
+            BundleLookup = bundleLookup;
+            PathFormatter = pathFormatter;
+            Settings = settings;
         }
+
+        protected IBundleLookup BundleLookup { get; }
+        protected IPathFormatter PathFormatter { get; }
+        protected BunderSettings Settings { get; }
 
         /// <summary>
         /// Resolves values defined in <paramref name="context"/> to a list of renderable <see cref="Asset"/>.
@@ -24,13 +29,33 @@ namespace Bunder
         /// <param name="context"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public virtual IReadOnlyList<Asset> Resolve(AssetResolutionContext context)
+        public virtual IEnumerable<Asset> Resolve(AssetResolutionContext context)
         {
             Guard.IsNotNull(context, nameof(context));
 
             var assets = new List<Asset>();
             BuildAssets(assets, context.PathsOrBundles, context.UseBundledOutput, context.IncludeVersioning);
-            return EliminateDuplicates(assets, context.IncludeVersioning).ToList();
+            return EliminateDuplicates(assets, context.IncludeVersioning);
+        }
+
+        /// <summary>
+        /// List of paths or bundles will be resolved to a list of asset paths based on <see cref="Asset.Value"/>.
+        /// </summary>
+        /// <param name="pathsOrBundles">List of paths or bundles to resolve.</param>
+        /// <returns></returns>
+        public virtual IEnumerable<string> Resolve(params string[] pathsOrBundles)
+        {
+            if (pathsOrBundles == null || pathsOrBundles.Length == 0)
+                return Enumerable.Empty<string>();
+
+            var assets = Resolve(new AssetResolutionContext(pathsOrBundles,
+                                                            useBundledOutput: Settings.UseBundledOutput,
+                                                            includeVersioning: Settings.UseVersioning));
+
+            if (assets == null)
+                return Enumerable.Empty<string>();
+
+            return assets.Select(a => a.Value);
         }
 
         /// <summary>
@@ -44,16 +69,16 @@ namespace Bunder
         {
             foreach (string contentReference in references)
             {
-                if (_bundleLookup.TryGetBundle(contentReference, out Bundle bundle))
+                if (BundleLookup.TryGetBundle(contentReference, out Bundle bundle))
                 {
                     if (useBundledOutput)
-                        assets.Add(new Asset(_pathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle));
+                        assets.Add(new Asset(PathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle));
                     else
                         BuildAssets(assets, bundle.Files, useBundledOutput, useVersioning);
                 }
                 else
                 {
-                    assets.Add(new Asset(_pathFormatter.GetFullPath(contentReference, useVersioning)));
+                    assets.Add(new Asset(PathFormatter.GetFullPath(contentReference, useVersioning)));
                 }
             }
         }
@@ -86,7 +111,7 @@ namespace Bunder
                         // add the bundled contents to list to check so those scripts are not duplicated in the resulting list
                         foreach (string filePath in asset.Bundle.Files)
                         {
-                            bundledContents.Add(_pathFormatter.GetFullPath(filePath, useVersioning));
+                            bundledContents.Add(PathFormatter.GetFullPath(filePath, useVersioning));
                         }
                     }
 

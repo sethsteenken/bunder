@@ -13,6 +13,13 @@ namespace Bunder
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        IReadOnlyList<Asset> Resolve(AssetResolutionContext context);
+        IEnumerable<Asset> Resolve(AssetResolutionContext context);
+
+        /// <summary>
+        /// List of paths or bundles will be resolved to a list of asset paths based on <see cref="Asset.Value"/>.
+        /// </summary>
+        /// <param name="pathsOrBundles">List of paths or bundles to resolve.</param>
+        /// <returns></returns>
+        IEnumerable<string> Resolve(params string[] pathsOrBundles);
     }
 }

@@ -22,7 +22,7 @@ namespace Bunder
         /// </summary>
         protected IDictionary<string, string> OutputDirectoryLookup { get; private set; }
 
-        protected abstract IReadOnlyList<BundleConfig> GetBundleConfiguration();
+        protected abstract IEnumerable<BundleConfig> GetBundleConfiguration();
 
         public virtual IEnumerable<Bundle> Build()
         {
@@ -31,7 +31,7 @@ namespace Bunder
 
             foreach (var bundleConfig in bundleConfigs)
             {
-                if (bundleConfig.Files == null || bundleConfig.Files.Count == 0)
+                if (bundleConfig.Files == null || !bundleConfig.Files.Any())
                 {
                     throw new BundleConfigurationException(@$"Bundle {bundleConfig.Name} must have at least one file under Files reference. 
 Make sure configuration is being read properly. Under JSON configuration, ensure the serialization is correctly finding values. Case of property names
@@ -44,7 +44,7 @@ may also affect the serialization. A custom serializer can also be set for {type
                         $"created from {typeof(IBundlingConfiguration).FullName} implementation are unique.");
 
                 string fileExtension = Path.GetExtension(string.IsNullOrWhiteSpace(bundleConfig.OutputFileName) 
-                                            ? bundleConfig.Files[0] 
+                                            ? bundleConfig.Files.First() 
                                             : bundleConfig.OutputFileName).Replace(".", "");
                 string outputDirectory = bundleConfig.OutputDirectory;
 

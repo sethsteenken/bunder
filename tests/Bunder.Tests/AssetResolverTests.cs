@@ -9,14 +9,14 @@ namespace Bunder.Tests
     public class AssetResolverTests
     {
         [Fact]
-        public void Resolve_ThrowsException_WhenContextIsNull()
+        public void Resolve_ContextParam_ThrowsException_WhenContextIsNull()
         {
             var assetResolver = AssetResolverTestHelper.BuildTestResolver();
             Assert.Throws<ArgumentNullException>(() => assetResolver.Resolve(context: null));
         }
 
         [Fact]
-        public void Resolve_DoesNotReturnNull_WhenValidContextWithNullPathsIsSupplied()
+        public void Resolve_ContextParam_DoesNotReturnNull_WhenValidContextWithNullPathsIsSupplied()
         {
             var assetResolver = AssetResolverTestHelper.BuildTestResolver();
             var context = new AssetResolutionContext(null, useBundledOutput: true, includeVersioning: true);
@@ -27,7 +27,7 @@ namespace Bunder.Tests
         }
 
         [Fact]
-        public void Resolve_DoesNotReturnNull_WhenValidContextWithPathsIsSupplied()
+        public void Resolve_ContextParam_DoesNotReturnNull_WhenValidContextWithPathsIsSupplied()
         {
             var assetResolver = AssetResolverTestHelper.BuildTestResolver();
             var context = AssetResolverTestHelper.BuildValidResolutionContext();
@@ -39,9 +39,8 @@ namespace Bunder.Tests
 
         [Theory]
         [InlineData("my-bundle", "/my/source.js")]
-        [InlineData()]
         [InlineData("my-bundle", "/my/source.js", "some-other-bundle", "another-bundle")]
-        public void Resolve_ReturnsCorrectCount_WhenBundledOutputTrue(params string[] pathsOrBundles)
+        public void Resolve_ContextParam_ReturnsCorrectCount_WhenBundledOutputTrue(params string[] pathsOrBundles)
         {                                    
             var assetResolver = AssetResolverTestHelper.BuildTestResolver();
 
@@ -49,13 +48,13 @@ namespace Bunder.Tests
 
             var assets = assetResolver.Resolve(context);
 
-            Assert.Equal(pathsOrBundles?.Count() ?? 0, assets.Count);
+            Assert.Equal(pathsOrBundles?.Count() ?? 0, assets.Count());
         }
 
         [Theory]
         [InlineData("my-bundle", "one.js", "two.js")]
         [InlineData("my-other-bundle", "one-source-file.js")]
-        public void Resolve_ReturnsBundledFiles_WhenValidBundleIsFoundAndUseBundledOutputFalse(string bundleName, params string[] files)
+        public void Resolve_ContextParam_ReturnsBundledFiles_WhenValidBundleIsFoundAndUseBundledOutputFalse(string bundleName, params string[] files)
         {
             var bundle = new Bundle(bundleName, "js", "/my/output-directory", files);
             var bundleLookup = new Mock<IBundleLookup>();
@@ -67,13 +66,13 @@ namespace Bunder.Tests
 
             var assets = assetResolver.Resolve(context);
 
-            Assert.Equal(bundle.Files, assets.Select(a => a.Value).ToArray());
+            Assert.Equal(bundle.Files, assets.Select(a => a.Value));
         }
 
         [Theory]
         [InlineData("my-bundle", "one.js", "two.js")]
         [InlineData("my-other-bundle", "one-source-file.js")]
-        public void Resolve_ReturnsBundledOutput_WhenValidBundleIsFoundAndUseBundledOutputTrue(string bundleName, params string[] files)
+        public void Resolve_ContextParam_ReturnsBundledOutput_WhenValidBundleIsFoundAndUseBundledOutputTrue(string bundleName, params string[] files)
         {
             string directory = "/my/output-directory";
             var outputFileName = $"{bundleName}_output.js";
@@ -89,12 +88,12 @@ namespace Bunder.Tests
 
             var assets = assetResolver.Resolve(context);
 
-            Assert.Equal(1, assets.Count);
-            Assert.Equal(expectedOutput, assets[0].Value);
+            Assert.Single(assets);
+            Assert.Equal(expectedOutput, assets.First().Value);
         }
 
         [Fact]
-        public void Resolve_RemovesDuplicateFiles_WhenBundleFilesHaveDuplicates()
+        public void Resolve_ContextParam_RemovesDuplicateFiles_WhenBundleFilesHaveDuplicates()
         {
             string outputDirectory = "/my/output";
             string duplicateFile = "duplicate.js";
@@ -117,8 +116,31 @@ namespace Bunder.Tests
 
             var assets = assetResolver.Resolve(context);
 
-            Assert.Equal(4, assets.Count);
+            Assert.Equal(4, assets.Count());
             Assert.Equal(1, assets.Count(a => a.Value == duplicateFile));
+        }
+
+        [Fact]
+        public void Resolve_PathsParam_ReturnsEmpty_WhenBundlePathsIsNullOrEmpty()
+        {
+            var assetResolver = AssetResolverTestHelper.BuildTestResolver();
+            Assert.Equal(Enumerable.Empty<string>(), assetResolver.Resolve(new string[] { }));
+        }
+
+        [Theory]
+        [InlineData("my-bundle", "/my/source.js")]
+        [InlineData("my-bundle", "/my/source.js", "some-other-bundle", "another-bundle")]
+        public void Resolve_PathsParam_ReturnsSameAssetsAsContextParam_WhenBundlePathsSupplied(params string[] pathsOrBundles)
+        {
+            var settings = new BunderSettings();
+            var assetResolver = AssetResolverTestHelper.BuildTestResolver(settings: settings);
+            var assets = assetResolver.Resolve(new AssetResolutionContext(pathsOrBundles,
+                                                                          useBundledOutput: settings.UseBundledOutput,
+                                                                          includeVersioning: settings.UseVersioning));
+            var paths = assetResolver.Resolve(pathsOrBundles);
+
+            Assert.Equal(assets.Count(), paths.Count());
+            Assert.Equal(assets.Select(a => a.Value), paths);
         }
     }
 }

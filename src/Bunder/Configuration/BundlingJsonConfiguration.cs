@@ -24,9 +24,9 @@ namespace Bunder
             _filePath = filePath;
         }
 
-        protected override IReadOnlyList<BundleConfig> GetBundleConfiguration()
+        protected override IEnumerable<BundleConfig> GetBundleConfiguration()
         {
-            return _serializer.Deserialize<List<BundleConfig>>(File.ReadAllText(_filePath));
+            return _serializer.Deserialize<IEnumerable<BundleConfig>>(File.ReadAllText(_filePath));
         } 
     }
 }

@@ -13,17 +13,19 @@ namespace Bunder.TagHelpers
             
         }
 
-        protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IReadOnlyList<Asset> assets)
+        protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets)
         {
-            for (int i = 0; i < assets.Count; i++)
+            int index = 0;
+            foreach (var asset in assets)
             {
-                if (i == 0)
+                if (index == 0)
                 {
-                    output.Attributes.Add("src", assets[i].Value);
+                    output.Attributes.Add("src", asset.Value);
                     continue;
                 }
 
-                output.PostElement.AppendHtml($"<script src='{assets[i].Value}'></script>");
+                output.PostElement.AppendHtml($"<script src='{asset.Value}'></script>");
+                index++;
             }
 
             return Task.CompletedTask;
