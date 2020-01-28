@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Bunder
 {
@@ -28,7 +29,8 @@ namespace Bunder
             IBundlingConfiguration bundlingConfiguration = null)
         {
             Guard.IsNotNull(services, nameof(services));
-            
+
+            services.TryAddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             services.TryAddSingleton<ISerializer, SystemTextJsonSerializer>();
             services.AddHttpContextAccessor();
 

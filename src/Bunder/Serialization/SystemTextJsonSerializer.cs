@@ -7,9 +7,16 @@ namespace Bunder
     /// </summary>
     internal class SystemTextJsonSerializer : ISerializer
     {
+        private readonly JsonSerializerOptions _options;
+
+        public SystemTextJsonSerializer(JsonSerializerOptions options)
+        {
+            _options = options;
+        }
+
         public T Deserialize<T>(string json) where T : class
         {
-            return JsonSerializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize<T>(json, _options);
         }
     }
 }

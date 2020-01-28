@@ -32,8 +32,12 @@ namespace Bunder
             foreach (var bundleConfig in bundleConfigs)
             {
                 if (bundleConfig.Files == null || bundleConfig.Files.Count == 0)
-                    throw new BundleConfigurationException("Bundle must have at least one file under Files reference.");
-
+                {
+                    throw new BundleConfigurationException(@$"Bundle {bundleConfig.Name} must have at least one file under Files reference. 
+Make sure configuration is being read properly. Under JSON configuration, ensure the serialization is correctly finding values. Case of property names
+may also affect the serialization. A custom serializer can also be set for {typeof(ISerializer).FullName}.");
+                }
+                    
                 if (bundles.Any(b => string.Compare(b.Name, bundleConfig.Name, StringComparison.InvariantCultureIgnoreCase) == 0))
                     throw new BundleConfigurationException($"A bundle with the name '{bundleConfig.Name}' has already been registered. " +
                         $"Ensure all Bundle Name values created under {typeof(BundleConfig).FullName} " +
