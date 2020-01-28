@@ -17,37 +17,41 @@ PM> Install-Package Bunder
 Inside Startup.cs in an AspNetCore project:
 
 ```csharp
+public IConfiguration Configuration { get; }
+
 public void ConfigureServices(IServiceCollection services)
 {
     //...
     services.AddMvc();
     //...
-    services.AddBunder();
+    services.AddBunder(new BunderSettings() { ... });
+    // OR
+    services.AddBunder(Configuration);
 }
 ```
 
 ### Bundle Configurations
-By default, bundle configurations are serialized from a JSON file at bundles.json.
+By default, bundle configurations are serialized from a JSON file at bundles.json. Some serialization may be case-senstive, so be aware of that when creating your config. This example assumes case is not sensitive, allowing for lowercase config properties.
 
 Bundles.json:
 ```json
 [
   {
-    "Name": "style-bundle",
-    "Files": [
+    "name": "style-bundle",
+    "files": [
       "source_files/styles.css"
     ]
   },
   {
-    "Name": "my-bundle-one",
-    "Files": [
+    "name": "my-bundle-one",
+    "files": [
       "source_files/test_one.js",
       "source_files/test_two.js"
     ]
   },
   {
-    "Name": "my-bundle-two",
-    "Files": [
+    "name": "my-bundle-two",
+    "files": [
       "source_files/test_one.js",
       "source_files/test_two.js",
       "source_files/test_three.js"
@@ -57,7 +61,7 @@ Bundles.json:
 ```
 
 ### Bunder Settings
-By default, Bunder will pull configuration settings from "Bunder" section of appsettings.json.
+By default, Bunder will pull configuration settings from "Bunder" section of appsettings.json. A custom section name can be applied on service registration.
 ```json
 {
   "Bunder": {
