@@ -11,15 +11,18 @@ namespace Bunder
         public AssetResolver(
             IBundleLookup bundleLookup, 
             IPathFormatter pathFormatter,
+            IBunderCache cache,
             BunderSettings settings)
         {
             BundleLookup = bundleLookup;
             PathFormatter = pathFormatter;
+            Cache = cache;
             Settings = settings;
         }
 
         protected IBundleLookup BundleLookup { get; }
         protected IPathFormatter PathFormatter { get; }
+        protected IBunderCache Cache { get; }
         protected BunderSettings Settings { get; }
 
         /// <summary>
@@ -33,9 +36,18 @@ namespace Bunder
         {
             Guard.IsNotNull(context, nameof(context));
 
+            string cacheKey = context.ToCacheKey();
+            if (Settings.Cache.Enabled && Cache.TryGet(cacheKey, out IEnumerable<Asset> cachedAssets))
+                return cachedAssets;
+
             var assets = new List<Asset>();
             BuildAssets(assets, context.PathsOrBundles, context.UseBundledOutput, context.IncludeVersioning);
-            return EliminateDuplicates(assets, context.IncludeVersioning);
+            var resultingAssets = EliminateDuplicates(assets, context.IncludeVersioning);
+
+            if (Settings.Cache.Enabled)
+                Cache.Add(cacheKey, resultingAssets);
+
+            return resultingAssets;
         }
 
         /// <summary>

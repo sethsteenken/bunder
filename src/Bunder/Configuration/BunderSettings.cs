@@ -43,5 +43,10 @@ namespace Bunder
         /// Default example: JavaScript (js) files will be output to "/content/js/".
         /// </summary>
         public IDictionary<string, string> OutputDirectories { get; set; } = DefaultOutputDirectoryLookup;
+
+        /// <summary>
+        /// Cache settings on storing asset resolutions in a cache.
+        /// </summary>
+        public BunderCacheSettings Cache { get; set; } = new BunderCacheSettings();
     }
 }

@@ -8,6 +8,7 @@ namespace Bunder.Tests
         public static AssetResolver BuildTestResolver(
             IBundleLookup bundleLookup = null, 
             IPathFormatter pathFormatter = null,
+            IBunderCache cache = null,
             BunderSettings settings = null)
         {
             if (bundleLookup == null)
@@ -19,7 +20,10 @@ namespace Bunder.Tests
             if (settings == null)
                 settings = new BunderSettings();
 
-            return new AssetResolver(bundleLookup, pathFormatter, settings);
+            if (cache == null)
+                cache = new Mock<IBunderCache>().Object;
+
+            return new AssetResolver(bundleLookup, pathFormatter, cache, settings);
         }
 
         public static AssetResolutionContext BuildValidResolutionContext()

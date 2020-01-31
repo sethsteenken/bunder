@@ -29,5 +29,10 @@ namespace Bunder
         /// Whether or not a unique version number should applied when generating list of <see cref="Asset"/>.
         /// </summary>
         public bool IncludeVersioning { get; private set; }
+
+        internal string ToCacheKey()
+        {
+            return string.Concat("bunder_", PathsOrBundles, UseBundledOutput, IncludeVersioning);
+        }
     }
 }

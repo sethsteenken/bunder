@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bunder
@@ -15,7 +16,7 @@ namespace Bunder
         {
             Guard.IsNotNull(bundles, nameof(bundles));
 
-            _bundleDictionary = bundles.ToDictionary((bundle) => bundle.Name?.ToLower());
+            _bundleDictionary = bundles.ToDictionary((bundle) => bundle.Name, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace Bunder
         {
             Guard.IsNotNull(name, nameof(name));
 
-            return _bundleDictionary.TryGetValue(name.ToLower(), out bundle);
+            return _bundleDictionary.TryGetValue(name, out bundle);
         }
     }
 }

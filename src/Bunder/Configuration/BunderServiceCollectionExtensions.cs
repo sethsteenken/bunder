@@ -59,7 +59,10 @@ namespace Bunder
                                     file.PhysicalPath);
                 });
             }
-            
+
+            services.TryAddSingleton(typeof(IBunderCache), (settings.Cache?.Enabled ?? false) ? typeof(BunderResolutionMemoryCache) 
+                                                                                              : typeof(EmptyCache));
+
             services.TryAddSingleton<IEnumerable<Bundle>>((serviceProvider) => serviceProvider.GetRequiredService<IBundlingConfiguration>().Build());
             services.TryAddSingleton<IBundleLookup, BundleLookup>();
             services.TryAddSingleton<IVersioningFormatter, FileVersioningFormatter>();
