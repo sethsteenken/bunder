@@ -29,7 +29,7 @@ namespace Bunder
 
         public bool TryGet(string key, out IEnumerable<Asset> assets)
         {
-            if (_cacheSettings.Enabled)
+            if (!_cacheSettings.Enabled)
             {
                 assets = Enumerable.Empty<Asset>();
                 return false;

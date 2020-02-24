@@ -48,8 +48,14 @@ namespace Bunder
 
                     var fileProvider = serviceProvider.GetService<IFileProvider>();
                     if (fileProvider == null)
+                    {
+#if NET_CORE_APP_3_1
+                        fileProvider = serviceProvider.GetRequiredService<IWebHostEnvironment>().ContentRootFileProvider;
+#else
                         fileProvider = serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootFileProvider;
-                                                      
+#endif
+                    }
+                                                       
                     var file = fileProvider.GetFileInfo(bunderSettings.BundlesConfigFilePath);
                     if (file == null || !file.Exists)
                         throw new BundleConfigurationException($"Configuration file {bunderSettings.BundlesConfigFilePath} was not found.");
