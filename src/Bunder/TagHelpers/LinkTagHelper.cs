@@ -17,7 +17,9 @@ namespace Bunder.TagHelpers
             int index = 0;
             foreach (var asset in assets)
             {
-                if (index == 0)
+                index++;
+
+                if (index == 1)
                 {
                     output.Attributes.Add("href", asset.Value);
                     output.Attributes.Add("rel", "stylesheet");
@@ -25,7 +27,6 @@ namespace Bunder.TagHelpers
                 }
 
                 output.PostElement.AppendHtml($"<link href='{asset.Value}' rel='stylesheet' />");
-                index++;
             }
 
             return Task.CompletedTask;

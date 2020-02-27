@@ -18,14 +18,15 @@ namespace Bunder.TagHelpers
             int index = 0;
             foreach (var asset in assets)
             {
-                if (index == 0)
+                index++;
+
+                if (index == 1)
                 {
                     output.Attributes.Add("src", asset.Value);
                     continue;
                 }
 
                 output.PostElement.AppendHtml($"<script src='{asset.Value}'></script>");
-                index++;
             }
 
             return Task.CompletedTask;
