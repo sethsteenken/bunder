@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -30,19 +28,18 @@ namespace Bunder
         {
             Guard.IsNotNull(services, nameof(services));
 
-            services.TryAddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            services.TryAddSingleton<ISerializer, SystemTextJsonSerializer>();
-            services.AddHttpContextAccessor();
+            services.AddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            services.AddSingleton<ISerializer, SystemTextJsonSerializer>();
 
-            services.TryAddSingleton<BunderSettings>(settings ?? new BunderSettings());
+            services.AddSingleton<BunderSettings>(settings ?? new BunderSettings());
    
             if (bundlingConfiguration != null)
             {
-                services.TryAddSingleton<IBundlingConfiguration>(bundlingConfiguration);
+                services.AddSingleton<IBundlingConfiguration>(bundlingConfiguration);
             }
             else
             {
-                services.TryAddSingleton<IBundlingConfiguration>((serviceProvider) =>
+                services.AddSingleton<IBundlingConfiguration>((serviceProvider) =>
                 {
                     var bunderSettings = serviceProvider.GetRequiredService<BunderSettings>();
 
@@ -66,20 +63,14 @@ namespace Bunder
                 });
             }
 
-            services.TryAddSingleton(typeof(IBunderCache), (settings.Cache?.Enabled ?? false) ? typeof(BunderResolutionMemoryCache) 
+            services.AddSingleton(typeof(IBunderCache), (settings.Cache?.Enabled ?? false) ? typeof(BunderResolutionMemoryCache) 
                                                                                               : typeof(EmptyCache));
 
-            services.TryAddSingleton<IEnumerable<Bundle>>((serviceProvider) => serviceProvider.GetRequiredService<IBundlingConfiguration>().Build());
-            services.TryAddSingleton<IBundleLookup, BundleLookup>();
-            services.TryAddSingleton<IVersioningFormatter, FileVersioningFormatter>();
-            services.TryAddScoped<IPathFormatter>((serviceProvider) =>
-            {
-                return new UrlPathFormatter(
-                    serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.GetBaseUrl(),
-                    serviceProvider.GetRequiredService<IVersioningFormatter>());
-            });
-
-            services.TryAddScoped<IAssetResolver, AssetResolver>();
+            services.AddSingleton<IEnumerable<Bundle>>((serviceProvider) => serviceProvider.GetRequiredService<IBundlingConfiguration>().Build());
+            services.AddSingleton<IBundleLookup, BundleLookup>();
+            services.AddSingleton<IVersioningFormatter, FileVersioningFormatter>();
+            services.AddSingleton<IPathFormatter, UrlPathFormatter>();
+            services.AddSingleton<IAssetResolver, AssetResolver>();
 
             return services;
         }

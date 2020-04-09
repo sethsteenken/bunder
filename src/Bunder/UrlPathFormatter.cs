@@ -8,12 +8,10 @@ namespace Bunder
     /// </summary>
     public class UrlPathFormatter : IPathFormatter
     {
-        private readonly string _baseUrl;
         private readonly IVersioningFormatter _versioningFormatter;
 
-        public UrlPathFormatter(string baseUrl, IVersioningFormatter versioningFormatter)
+        public UrlPathFormatter(IVersioningFormatter versioningFormatter)
         {
-            _baseUrl = baseUrl;
             _versioningFormatter = versioningFormatter;
         }
 
@@ -33,7 +31,7 @@ namespace Bunder
             if (!IsValidUri(virtualPath, out Uri uri))
                 throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.");
 
-            return uri.ToAbsoluteUrl(_baseUrl);
+            return uri.ToString();
         }
 
         private static bool IsValidUri(string path, out Uri uri)

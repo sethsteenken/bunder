@@ -33,9 +33,8 @@ namespace Bunder.Tests
             var formatter = UrlPathFormatterTestHelper.BuildFormatter(baseUrl: baseUrl);
 
             var result = formatter.GetFullPath(path, includeVersioning: false);
-            string expected = baseUrl + (path.StartsWith("/") ? path.Substring(1) : path);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(path, result);
         }
 
         [Theory]
@@ -54,7 +53,7 @@ namespace Bunder.Tests
             var formatter = UrlPathFormatterTestHelper.BuildFormatter(baseUrl: baseUrl, versioningFormatter: versioningFormatter.Object);
 
             var result = formatter.GetFullPath(path, includeVersioning: true);
-            string expected = baseUrl + (path.StartsWith("/") ? path.Substring(1) : path) + versionIndicator;
+            string expected = $"{path}{versionIndicator}";
 
             versioningFormatter.Verify(v => v.GetVersionedPath(It.IsAny<string>()), Times.Once);
             Assert.Equal(expected, result);

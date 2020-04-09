@@ -26,11 +26,11 @@
 <p></p>
 
 <h2>@styleBundleTest</h2>
-<link asset="@styleBundleTest" use-bundled-output="true" />
+<link asset="@styleBundleTest" />
 
 @foreach (var bundleName in bundleTests)
 {
     <h2>@bundleName</h2>
-    <script asset="@bundleName" use-versioning="false" use-bundled-output="true"></script>
+    <script asset="@bundleName" ></script>
 }
 
