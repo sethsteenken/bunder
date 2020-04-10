@@ -31,7 +31,11 @@ namespace Bunder
             services.AddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             services.AddSingleton<ISerializer, SystemTextJsonSerializer>();
 
-            services.AddSingleton<BunderSettings>(settings ?? new BunderSettings());
+            if (settings == null)
+                settings = new BunderSettings();
+
+            services.AddSingleton<BunderSettings>(settings);
+            services.AddSingleton<BunderCacheSettings>(settings.Cache ?? new BunderCacheSettings());
    
             if (bundlingConfiguration != null)
             {

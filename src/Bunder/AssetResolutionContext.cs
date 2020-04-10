@@ -32,7 +32,7 @@ namespace Bunder
 
         internal string ToCacheKey()
         {
-            return string.Concat("bunder_", PathsOrBundles, UseBundledOutput, IncludeVersioning);
+            return $"bunder_{string.Join(",",PathsOrBundles)}|{UseBundledOutput}|{IncludeVersioning}";
         }
     }
 }
