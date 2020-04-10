@@ -40,5 +40,24 @@ namespace Bunder
         {
             return path?.Contains(Path.DirectorySeparatorChar.ToString()) ?? false;
         }
+
+        public static string PrependSlash(string path, bool fixSlashes = true)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return string.Empty;
+
+            char slash = Path.AltDirectorySeparatorChar;
+
+            if (fixSlashes)
+            {
+                DetermineCharsToAdjust(IsFileSystemPath(path), out char slashToReplace, out slash);
+                path = path.Replace(slashToReplace, slash);
+            }
+
+            if (path[0] == slash)
+                return path;
+
+            return slash + path;
+        }
     }
 }

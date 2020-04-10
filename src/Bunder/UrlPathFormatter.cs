@@ -31,7 +31,12 @@ namespace Bunder
             if (!IsValidUri(virtualPath, out Uri uri))
                 throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.");
 
-            return uri.ToString();
+            return GetPath(uri);
+        }
+
+        protected virtual string GetPath(Uri uri)
+        {
+            return PathHelper.PrependSlash(uri.ToString());
         }
 
         private static bool IsValidUri(string path, out Uri uri)

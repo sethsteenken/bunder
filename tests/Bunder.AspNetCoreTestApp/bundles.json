@@ -8,8 +8,8 @@
   {
     "name": "my-bundle-one",
     "files": [
-      "source_files/test_one.js",
-      "source_files/test_two.js"
+      "/source_files/test_one.js",
+      "/source_files/test_two.js"
     ]
   },
   {
@@ -24,13 +24,13 @@
     "name": "my-bundle-three",
     "files": [
       "my-bundle-one",
-      "source_files/test_three.js"
+      "/source_files/test_three.js"
     ]
   },
   {
     "name": "my-bundle-four",
     "files": [
-      "source_files/test_three.js"
+      "/source_files/test_three.js"
     ]
   }
 ]
