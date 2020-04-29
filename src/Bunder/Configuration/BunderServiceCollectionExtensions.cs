@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -28,7 +29,7 @@ namespace Bunder
         {
             Guard.IsNotNull(services, nameof(services));
 
-            services.AddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            services.TryAddSingleton<JsonSerializerOptions>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             services.AddSingleton<ISerializer, SystemTextJsonSerializer>();
 
             if (settings == null)
