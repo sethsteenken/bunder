@@ -17,7 +17,7 @@ namespace Bunder
             string subPath = null)
         {
             Name = name?.Trim();
-            FileExtension = extension?.Trim();
+            FileExtension = extension?.Trim() ?? BundleConfig.DefaultExtension;
             Files = files ?? new List<string>();
             OutputFileName = string.IsNullOrWhiteSpace(outputFileName) ? $"{Name.Replace(" ", "_")}.min.{FileExtension}" : outputFileName?.Trim();
             SubPath = subPath?.Trim();

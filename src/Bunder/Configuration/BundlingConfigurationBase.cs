@@ -43,9 +43,7 @@ may also affect the serialization. A custom serializer can also be set for {type
                         $"Ensure all Bundle Name values created under {typeof(BundleConfig).FullName} " +
                         $"created from {typeof(IBundlingConfiguration).FullName} implementation are unique.");
 
-                string fileExtension = Path.GetExtension(string.IsNullOrWhiteSpace(bundleConfig.OutputFileName) 
-                                            ? bundleConfig.Files.First() 
-                                            : bundleConfig.OutputFileName).Replace(".", "");
+                string fileExtension = bundleConfig.OutputFileExtension;
                 string outputDirectory = bundleConfig.OutputDirectory;
 
                 if (string.IsNullOrWhiteSpace(outputDirectory) && OutputDirectoryLookup.TryGetValue(fileExtension, out string outputDir))
