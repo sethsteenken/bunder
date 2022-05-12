@@ -34,6 +34,12 @@ namespace Bunder
         public bool UseVersioning { get; set; } = true;
 
         /// <summary>
+        /// Flag on whether to always include "defer" attribute on rendered script tags.
+        /// Defaults to true.
+        /// </summary>
+        public bool DefaultToDefer { get; set; } = true;
+
+        /// <summary>
         /// Path / filename of the Bundle configuration json file. Default value is "bundles.json".
         /// </summary>
         public string BundlesConfigFilePath { get; set; } = "bundles.json";

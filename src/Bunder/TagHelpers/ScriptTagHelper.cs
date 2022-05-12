@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Bunder.TagHelpers
@@ -15,18 +17,25 @@ namespace Bunder.TagHelpers
 
         protected override Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets)
         {
-            int index = 0;
+            output.TagName = null;
+            
+            var scriptTagBuilder = new StringBuilder();
+
             foreach (var asset in assets)
             {
-                index++;
+                scriptTagBuilder.Append($"<script src='{asset.Value}'");
 
-                if (index == 1)
-                {
-                    output.Attributes.Add("src", asset.Value);
-                    continue;
-                }
+                if (context.AllAttributes.Any(a => a.Name == "async"))
+                    scriptTagBuilder.Append(" async");
 
-                output.PostElement.AppendHtml($"<script src='{asset.Value}'></script>");
+                if (Settings.DefaultToDefer || context.AllAttributes.Any(a => a.Name == "defer"))
+                    scriptTagBuilder.Append(" defer");
+
+                scriptTagBuilder.Append("></script>");
+
+                output.Content.AppendHtml(scriptTagBuilder.ToString());
+
+                scriptTagBuilder.Clear();
             }
 
             return Task.CompletedTask;
