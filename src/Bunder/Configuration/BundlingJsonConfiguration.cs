@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Bunder
 {
@@ -26,7 +27,8 @@ namespace Bunder
 
         protected override IEnumerable<BundleConfig> GetBundleConfiguration()
         {
-            return _serializer.Deserialize<IEnumerable<BundleConfig>>(File.ReadAllText(_filePath));
+            return _serializer.Deserialize<IEnumerable<BundleConfig>>(File.ReadAllText(_filePath)) 
+                ?? Enumerable.Empty<BundleConfig>();
         } 
     }
 }

@@ -31,6 +31,9 @@ namespace Bunder
 
             foreach (var bundleConfig in bundleConfigs)
             {
+                if (bundleConfig.Name == null)
+                    throw new BundleConfigurationException($"All bundle configurations must include a {nameof(BundleConfig.Name)}.");
+
                 if (bundleConfig.Files == null || !bundleConfig.Files.Any())
                 {
                     throw new BundleConfigurationException(@$"Bundle {bundleConfig.Name} must have at least one file under Files reference. 
@@ -43,10 +46,10 @@ may also affect the serialization. A custom serializer can also be set for {type
                         $"Ensure all Bundle Name values created under {typeof(BundleConfig).FullName} " +
                         $"created from {typeof(IBundlingConfiguration).FullName} implementation are unique.");
 
-                string fileExtension = bundleConfig.OutputFileExtension;
-                string outputDirectory = bundleConfig.OutputDirectory;
+                var fileExtension = bundleConfig.OutputFileExtension;
+                var outputDirectory = bundleConfig.OutputDirectory;
 
-                if (string.IsNullOrWhiteSpace(outputDirectory) && OutputDirectoryLookup.TryGetValue(fileExtension, out string outputDir))
+                if (string.IsNullOrWhiteSpace(outputDirectory) && OutputDirectoryLookup.TryGetValue(fileExtension, out string? outputDir))
                     outputDirectory = outputDir;
 
                 bundles.Add(new Bundle(

@@ -9,7 +9,7 @@ namespace Bunder
             if (value == null || (value is string && string.IsNullOrWhiteSpace(value as string)))
                 throw new ArgumentNullException(paramName);
 
-            IsNotNull<T>(value, paramName, null);
+            IsNotNull<T>(value, paramName, string.Empty);
         }
 
         public static void IsNotNull<T>(T value, string paramName, string message)

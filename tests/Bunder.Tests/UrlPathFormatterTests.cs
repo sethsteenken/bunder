@@ -27,21 +27,6 @@ namespace Bunder.Tests
         [InlineData("valid-file.js")]
         [InlineData("/valid/path/")]
         [InlineData("/valid/path")]
-        public void GetFullPath_ReturnsValidFullPath_WhenVirtualPathIsValid(string path)
-        {
-            const string baseUrl = "https://www.myawesomedomain.com/";
-            var formatter = UrlPathFormatterTestHelper.BuildFormatter(baseUrl: baseUrl);
-
-            var result = formatter.GetFullPath(path, includeVersioning: false);
-
-            Assert.Equal(path, result);
-        }
-
-        [Theory]
-        [InlineData("/valid/path.jpg")]
-        [InlineData("valid-file.js")]
-        [InlineData("/valid/path/")]
-        [InlineData("/valid/path")]
         public void GetFullPath_ReturnsValidFullPathWithVersioning_WhenVirtualPathIsValid(string path)
         {
             const string baseUrl = "https://www.myawesomedomain.com/";
@@ -50,7 +35,7 @@ namespace Bunder.Tests
             var versioningFormatter = new Mock<IVersioningFormatter>();
             versioningFormatter.Setup(v => v.GetVersionedPath(path)).Returns($"{path}{versionIndicator}");
 
-            var formatter = UrlPathFormatterTestHelper.BuildFormatter(baseUrl: baseUrl, versioningFormatter: versioningFormatter.Object);
+            var formatter = UrlPathFormatterTestHelper.BuildFormatter(versioningFormatter: versioningFormatter.Object);
 
             var result = formatter.GetFullPath(path, includeVersioning: true);
             string expected = $"{path}{versionIndicator}";

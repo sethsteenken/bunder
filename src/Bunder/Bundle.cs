@@ -11,18 +11,18 @@ namespace Bunder
         public Bundle(
             string name, 
             string extension, 
-            string outputDirectory,
+            string? outputDirectory,
             IEnumerable<string> files, 
-            string outputFileName = null, 
-            string subPath = null)
+            string? outputFileName = null, 
+            string? subPath = null)
         {
-            Name = name?.Trim();
+            Name = name.Trim();
             FileExtension = extension?.Trim() ?? BundleConfig.DefaultExtension;
             Files = files ?? new List<string>();
-            OutputFileName = string.IsNullOrWhiteSpace(outputFileName) ? $"{Name.Replace(" ", "_")}.min.{FileExtension}" : outputFileName?.Trim();
+            OutputFileName = outputFileName == null ? $"{Name.Replace(" ", "_")}.min.{FileExtension}" : outputFileName.Trim();
             SubPath = subPath?.Trim();
 
-            OutputPath = PathHelper.Combine(outputDirectory, SubPath, OutputFileName);
+            OutputPath = PathHelper.Combine(outputDirectory ?? string.Empty, SubPath ?? string.Empty, OutputFileName);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Bunder
         /// <summary>
         /// Optional sub directory path for the output.
         /// </summary>
-        public string SubPath { get; private set; }
+        public string? SubPath { get; private set; }
 
         /// <summary>
         /// List of file paths that represent the content of the bundle.

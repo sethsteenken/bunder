@@ -9,7 +9,7 @@ namespace Bunder
         public static string Combine(params string[] paths)
         {
             bool isFileSystem = paths?.Any(path => IsFileSystemPath(path)) ?? false;
-            return Combine(fileSystem: isFileSystem, paths: paths);
+            return Combine(fileSystem: isFileSystem, paths: paths ?? new string[] { });
         }
 
         public static string Combine(bool fileSystem, params string[] paths)

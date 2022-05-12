@@ -7,25 +7,7 @@
     /// </summary>
     public sealed class Asset
     {
-        public Asset(string value)
-            : this (value, isStatic: false)
-        {
-
-        }
-
-        public Asset(string value, bool isStatic)
-            : this (value, isStatic, bundle: null)
-        {
-
-        }
-
-        public Asset(string value, Bundle bundle)
-            : this(value, isStatic: false, bundle: bundle)
-        {
-
-        }
-
-        private Asset(string value, bool isStatic, Bundle bundle)
+        public Asset(string value, bool isStatic = false, Bundle? bundle = null)
         {
             Value = value;
             IsStatic = isStatic;
@@ -50,7 +32,7 @@
         /// <summary>
         /// The bundle reference if this Asset represents a bundle.
         /// </summary>
-        public Bundle Bundle { get; private set; }
+        public Bundle? Bundle { get; private set; }
 
         public override string ToString()
         {

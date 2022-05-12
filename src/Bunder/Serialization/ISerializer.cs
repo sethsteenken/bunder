@@ -11,6 +11,6 @@
         /// <typeparam name="T">Generic type class.</typeparam>
         /// <param name="json">Raw JSON string.</param>
         /// <returns></returns>
-        T Deserialize<T>(string json) where T : class;
+        T? Deserialize<T>(string json) where T : class;
     }
 }

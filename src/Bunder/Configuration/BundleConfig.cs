@@ -10,11 +10,11 @@ namespace Bunder
     {
         public static string DefaultExtension = "js";
 
-        public string Name { get; set; }
-        public string OutputFileName { get; set; }
-        public string SubPath { get; set; }
-        public IEnumerable<string> Files { get; set; }
-        public string OutputDirectory { get; set; }
+        public string? Name { get; set; }
+        public string? OutputFileName { get; set; }
+        public string? SubPath { get; set; }
+        public IEnumerable<string>? Files { get; set; }
+        public string? OutputDirectory { get; set; }
 
         public string OutputFileExtension
         {
@@ -23,15 +23,18 @@ namespace Bunder
                 if (!string.IsNullOrWhiteSpace(OutputFileName))
                     return Path.GetExtension(OutputFileName).Replace(".", "");
 
-                string ext = null;
+                string ext = string.Empty;
 
-                foreach (var filePath in Files)
+                if (Files != null)
                 {
-                    ext = Path.GetExtension(filePath);
-                    if (!string.IsNullOrEmpty(ext))
-                        break;
+                    foreach (var filePath in Files)
+                    {
+                        ext = Path.GetExtension(filePath);
+                        if (!string.IsNullOrEmpty(ext))
+                            break;
+                    }
                 }
-
+                
                 if (string.IsNullOrWhiteSpace(ext))
                     return DefaultExtension;
 

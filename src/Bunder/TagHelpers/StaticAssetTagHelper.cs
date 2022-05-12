@@ -21,7 +21,7 @@ namespace Bunder.TagHelpers
         protected IAssetResolver AssetResolver { get; private set; }
 
         [HtmlAttributeName(AttributeNameAsset)]
-        public string Asset { get; set; }
+        public string? Asset { get; set; }
 
         [HtmlAttributeName("use-bundled-output")]
         public bool? UseBundledOutput { get; set; }
@@ -29,7 +29,7 @@ namespace Bunder.TagHelpers
         [HtmlAttributeName("use-versioning")]
         public bool? UseVersioning { get; set; }
 
-        protected IEnumerable<string> Assets => Asset?.Replace('|', ',').Replace(';', ',').Split(',');
+        protected IEnumerable<string> Assets => Asset?.Replace('|', ',')?.Replace(';', ',')?.Split(',') ?? new string[] { };
 
         protected abstract Task ProcessStaticAssetTagAsync(TagHelperContext context, TagHelperOutput output, IEnumerable<Asset> assets);
 

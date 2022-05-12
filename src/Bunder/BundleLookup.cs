@@ -25,7 +25,7 @@ namespace Bunder
         /// <param name="name">The unique name of the registered <see cref="Bundle"/>.</param>
         /// <param name="bundle">The registered bundle found matching <paramref name="name"/>.</param>
         /// <returns>True if bundle is found. False if not found.</returns>
-        public bool TryGetBundle(string name, out Bundle bundle)
+        public bool TryGetBundle(string name, out Bundle? bundle)
         {
             Guard.IsNotNull(name, nameof(name));
 

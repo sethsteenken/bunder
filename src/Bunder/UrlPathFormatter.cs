@@ -28,8 +28,8 @@ namespace Bunder
             if (includeVersioning)
                 virtualPath = _versioningFormatter.GetVersionedPath(virtualPath);
 
-            if (!IsValidUri(virtualPath, out Uri uri))
-                throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.");
+            if (!IsValidUri(virtualPath, out Uri? uri) || uri == null)
+                throw new FormatException($"Could not create Uri from virtual path '{virtualPath}'.".Sanitize());
 
             return GetPath(uri);
         }
@@ -39,7 +39,7 @@ namespace Bunder
             return PathHelper.PrependSlash(uri.ToString());
         }
 
-        private static bool IsValidUri(string path, out Uri uri)
+        private static bool IsValidUri(string path, out Uri? uri)
         {
             uri = null;
 

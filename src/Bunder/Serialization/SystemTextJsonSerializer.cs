@@ -14,7 +14,7 @@ namespace Bunder
             _options = options;
         }
 
-        public T Deserialize<T>(string json) where T : class
+        public T? Deserialize<T>(string json) where T : class
         {
             return JsonSerializer.Deserialize<T>(json, _options);
         }

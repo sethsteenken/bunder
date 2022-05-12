@@ -81,10 +81,10 @@ namespace Bunder
         {
             foreach (string contentReference in references)
             {
-                if (BundleLookup.TryGetBundle(contentReference, out Bundle bundle))
+                if (BundleLookup.TryGetBundle(contentReference, out Bundle? bundle) && bundle != null)
                 {
                     if (useBundledOutput)
-                        assets.Add(new Asset(PathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle));
+                        assets.Add(new Asset(PathFormatter.GetFullPath(bundle.OutputPath, useVersioning), bundle: bundle));
                     else
                         BuildAssets(assets, bundle.Files, useBundledOutput, useVersioning);
                 }

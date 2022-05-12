@@ -25,7 +25,7 @@ namespace Bunder
         public static IServiceCollection AddBunder(
             this IServiceCollection services, 
             BunderSettings settings, 
-            IBundlingConfiguration bundlingConfiguration = null)
+            IBundlingConfiguration? bundlingConfiguration = null)
         {
             Guard.IsNotNull(services, nameof(services));
 
@@ -51,13 +51,13 @@ namespace Bunder
                     var fileProvider = serviceProvider.GetService<IFileProvider>();
                     if (fileProvider == null)
                     {
-#if NET_CORE_APP_3_1
-                        fileProvider = serviceProvider.GetRequiredService<IWebHostEnvironment>().ContentRootFileProvider;
-#else
+#if NETSTANDARD
                         fileProvider = serviceProvider.GetRequiredService<IHostingEnvironment>().ContentRootFileProvider;
+#else
+                        fileProvider = serviceProvider.GetRequiredService<IWebHostEnvironment>().ContentRootFileProvider;
 #endif
                     }
-                                                       
+
                     var file = fileProvider.GetFileInfo(bunderSettings.BundlesConfigFilePath);
                     if (file == null || !file.Exists)
                         throw new BundleConfigurationException($"Configuration file {bunderSettings.BundlesConfigFilePath} was not found.");
@@ -94,7 +94,7 @@ namespace Bunder
             this IServiceCollection services,
             IConfiguration configuration,
             string sectionName = "Bunder",
-            IBundlingConfiguration bundlingConfiguration = null)
+            IBundlingConfiguration? bundlingConfiguration = null)
         {
             Guard.IsNotNull(services, nameof(services));
             Guard.IsNotNull(configuration, nameof(configuration));
